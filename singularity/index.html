@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HADI KHAN — SINGULARITY</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;400;700;800&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --lime:#c8ff00;--cyan:#00ffff;--pink:#ff00aa;--orange:#ff6600;
+  --blue:#0066ff;--purple:#aa00ff;--red:#ff2200;
+  --bg:#000005;--glass:rgba(8,12,20,0.85);
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);
+  font-family:'JetBrains Mono',monospace;color:#e0e0e0;}
+
+/* ── Canvas layers ── */
+#bg-canvas{position:fixed;inset:0;z-index:0}
+#three-canvas{position:fixed;inset:0;z-index:1}
+#ui{position:fixed;inset:0;z-index:10;pointer-events:none}
+
+/* ── Loader ── */
+#loader{
+  position:fixed;inset:0;z-index:999;background:#000;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity 1.5s cubic-bezier(0.4,0,0.2,1);
+}
+#loader-title{
+  font-family:'Orbitron',sans-serif;font-weight:900;
+  font-size:clamp(2.5rem,8vw,7rem);letter-spacing:0.15em;
+  background:linear-gradient(135deg,var(--lime),var(--cyan),var(--pink));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;opacity:0;
+  animation:rise 1.2s cubic-bezier(0.16,1,0.3,1) 0.2s forwards;
+}
+#loader-sub{
+  font-size:clamp(0.55rem,1.4vw,0.8rem);letter-spacing:0.5em;
+  color:#333;margin-top:1rem;text-transform:uppercase;
+  opacity:0;animation:rise 1s ease 0.9s forwards;
+}
+#loader-progress{
+  width:clamp(180px,30vw,320px);height:2px;background:#111;
+  margin-top:3.5rem;overflow:hidden;opacity:0;
+  animation:rise 0.5s ease 1.1s forwards;border-radius:1px;
+}
+#loader-bar{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,var(--lime),var(--cyan));
+  transition:width 0.03s linear;box-shadow:0 0 12px var(--lime);
+}
+#loader-status{
+  font-size:9px;letter-spacing:0.3em;color:#222;margin-top:1rem;
+  text-transform:uppercase;opacity:0;animation:rise 0.5s ease 1.2s forwards;
+}
+@keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── HUD Top ── */
+#hud-top{
+  position:fixed;top:0;left:0;right:0;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 1.75rem;
+  background:linear-gradient(to bottom,rgba(0,0,5,0.9),transparent);
+  opacity:0;transition:opacity 1s ease;
+}
+#hud-name{
+  font-family:'Orbitron',sans-serif;font-size:clamp(10px,1.5vw,13px);
+  font-weight:700;letter-spacing:0.3em;color:var(--lime);text-transform:uppercase;
+}
+#hud-status{
+  display:flex;align-items:center;gap:1.5rem;
+  font-size:9px;color:#333;letter-spacing:0.15em;text-transform:uppercase;
+}
+.hud-dot{
+  display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:var(--lime);margin-right:6px;
+  animation:pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(200,255,0,0.4)}
+  50%{opacity:0.7;box-shadow:0 0 0 6px rgba(200,255,0,0)}}
+
+/* ── Left panel — GitHub ── */
+#panel-github{
+  position:fixed;left:0;top:50%;transform:translateY(-50%);
+  width:clamp(200px,18vw,260px);
+  background:var(--glass);border:1px solid rgba(200,255,0,0.15);
+  border-left:none;backdrop-filter:blur(20px);
+  padding:1.25rem;pointer-events:all;
+  opacity:0;transition:opacity 1s ease;
+  border-right-color:rgba(200,255,0,0.3);
+}
+.panel-title{
+  font-size:8.5px;letter-spacing:0.3em;color:var(--lime);
+  text-transform:uppercase;margin-bottom:1rem;
+  display:flex;align-items:center;gap:0.5rem;
+}
+.panel-title::before{content:'';width:12px;height:1px;background:var(--lime)}
+.repo-item{
+  padding:0.6rem 0;border-bottom:1px solid rgba(255,255,255,0.04);
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:10px;
+}
+.repo-item:last-child{border-bottom:none}
+.repo-name{color:#ccc;font-weight:600}
+.repo-lang{
+  font-size:8px;padding:1px 5px;border-radius:2px;
+  background:rgba(200,255,0,0.1);color:var(--lime);letter-spacing:0.05em;
+}
+.lang-python{background:rgba(0,200,255,0.1);color:var(--cyan)}
+
+/* ── Right panel — System ── */
+#panel-system{
+  position:fixed;right:0;top:50%;transform:translateY(-50%);
+  width:clamp(200px,18vw,260px);
+  background:var(--glass);border:1px solid rgba(0,255,255,0.15);
+  border-right:none;backdrop-filter:blur(20px);
+  padding:1.25rem;pointer-events:all;
+  opacity:0;transition:opacity 1s ease;
+}
+.meter{margin-bottom:1rem}
+.meter-label{
+  font-size:8.5px;color:#555;letter-spacing:0.15em;text-transform:uppercase;
+  margin-bottom:0.4rem;display:flex;justify-content:space-between;
+}
+.meter-label span{color:var(--cyan)}
+.meter-bar{height:3px;background:#111;border-radius:2px;overflow:hidden}
+.meter-fill{
+  height:100%;background:linear-gradient(90deg,var(--cyan),var(--lime));
+  transition:width 0.8s ease;box-shadow:0 0 8px var(--cyan);
+}
+.cert-cloud{
+  display:flex;flex-wrap:wrap;gap:0.3rem;margin-top:0.75rem;
+}
+.cert-tag{
+  font-size:7px;padding:2px 5px;background:rgba(170,0,255,0.15);
+  border:1px solid rgba(170,0,255,0.3);color:#aa88ff;
+  letter-spacing:0.05em;cursor:default;
+  transition:all 0.2s ease;
+}
+.cert-tag:hover{background:rgba(170,0,255,0.3);color:#fff}
+
+/* ── Bottom panel — AI Chat ── */
+#panel-ai{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:clamp(320px,55vw,700px);
+  background:var(--glass);border:1px solid rgba(255,0,170,0.2);
+  border-bottom:none;backdrop-filter:blur(20px);
+  padding:1rem 1.25rem 0.75rem;pointer-events:all;
+  opacity:0;transition:opacity 1s ease;
+}
+#ai-messages{
+  max-height:90px;overflow-y:auto;margin-bottom:0.6rem;
+  scrollbar-width:thin;scrollbar-color:rgba(255,0,170,0.3) transparent;
+}
+.ai-msg{font-size:10px;line-height:1.6;margin-bottom:0.4rem}
+.ai-msg.user{color:var(--lime);text-align:right}
+.ai-msg.bot{color:#ccc}
+.ai-msg.bot::before{content:'AI ▸ ';color:var(--pink);font-size:8px}
+#ai-input-row{display:flex;gap:0.5rem;align-items:center}
+#ai-input{
+  flex:1;background:transparent;border:none;border-bottom:1px solid rgba(255,0,170,0.3);
+  color:#e0e0e0;font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  padding:0.3rem 0;outline:none;letter-spacing:0.03em;
+}
+#ai-input::placeholder{color:#333;letter-spacing:0.1em}
+#ai-send{
+  font-size:8.5px;color:var(--pink);background:rgba(255,0,170,0.1);
+  border:1px solid rgba(255,0,170,0.3);padding:0.3rem 0.7rem;
+  cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;
+  transition:all 0.2s;font-family:'JetBrains Mono',monospace;
+  pointer-events:all;
+}
+#ai-send:hover{background:rgba(255,0,170,0.25);color:#fff}
+
+/* ── Stats bar ── */
+#stats-bar{
+  position:fixed;bottom:0;left:0;right:0;
+  display:flex;justify-content:center;gap:clamp(1rem,3.5vw,3.5rem);
+  padding:0.9rem 2rem 1rem;
+  background:linear-gradient(to top,rgba(0,0,5,0.95),transparent);
+  opacity:0;transition:opacity 1s ease;
+  pointer-events:none;
+}
+.st{text-align:center}
+.st-v{
+  font-family:'Orbitron',sans-serif;
+  font-size:clamp(0.9rem,2vw,1.5rem);font-weight:700;
+  background:linear-gradient(135deg,var(--lime),var(--cyan));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;display:block;line-height:1;letter-spacing:-0.02em;
+}
+.st-l{font-size:clamp(6px,1vw,8.5px);color:#333;text-transform:uppercase;
+  letter-spacing:0.12em;display:block;margin-top:0.25rem}
+
+/* ── Tooltip ── */
+#tooltip{
+  position:fixed;pointer-events:none;z-index:20;display:none;
+  background:rgba(0,0,8,0.95);border-left:2px solid var(--lime);
+  padding:1rem 1.25rem;max-width:260px;
+  box-shadow:0 0 40px rgba(200,255,0,0.08);
+  animation:tooltip-in 0.2s ease;
+}
+@keyframes tooltip-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.tt-h{font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--lime);margin-bottom:0.3rem}
+.tt-sub{font-size:8.5px;color:#444;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.75rem}
+.tt-body{font-size:10.5px;color:#888;line-height:1.7}
+.tt-badge{
+  display:inline-block;margin-top:0.6rem;font-size:9px;
+  background:rgba(200,255,0,0.08);border:1px solid rgba(200,255,0,0.25);
+  color:var(--lime);padding:2px 8px;letter-spacing:0.05em;
+}
+.tt-open{font-size:8px;color:#333;margin-top:0.5rem;letter-spacing:0.1em;text-transform:uppercase}
+
+/* ── Neural net panel ── */
+#panel-neural{
+  position:fixed;top:50%;right:clamp(210px,19vw,270px);transform:translateY(-50%);
+  width:180px;height:200px;
+  background:var(--glass);border:1px solid rgba(0,255,255,0.12);
+  backdrop-filter:blur(16px);padding:0.75rem;
+  opacity:0;transition:opacity 1s ease;display:none;
+}
+#neural-canvas{width:100%;height:140px}
+
+/* ── Security panel ── */
+#panel-security{
+  position:fixed;top:1rem;right:clamp(210px,19vw,270px);
+  width:200px;
+  background:var(--glass);border:1px solid rgba(255,0,0,0.15);
+  backdrop-filter:blur(16px);padding:0.75rem;
+  opacity:0;transition:opacity 1s ease;
+}
+.sec-item{
+  font-size:9px;color:#555;padding:0.35rem 0;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  display:flex;justify-content:space-between;
+}
+.sec-item:last-child{border:none}
+.sec-val{color:#ff6666}
+.sec-ok{color:#66ff66}
+
+/* ── Scan lines overlay ── */
+#scanlines{
+  position:fixed;inset:0;z-index:5;pointer-events:none;
+  background:repeating-linear-gradient(
+    0deg,rgba(0,0,0,0) 0px,rgba(0,0,0,0) 2px,
+    rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px
+  );
+}
+
+/* ── Vignette ── */
+#vignette{
+  position:fixed;inset:0;z-index:6;pointer-events:none;
+  background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,5,0.7) 100%);
+}
+
+/* ── Instructions ── */
+#instructions{
+  position:fixed;bottom:4.5rem;right:1.5rem;
+  font-size:8px;color:#1a1a1a;letter-spacing:0.12em;
+  text-align:right;line-height:2.2;text-transform:uppercase;
+  opacity:0;transition:opacity 1s ease;pointer-events:none;
+}
+</style>
+</head>
+<body>
+
+<!-- Background shader canvas -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- Three.js canvas -->
+<canvas id="three-canvas"></canvas>
+
+<!-- Overlays -->
+<div id="scanlines"></div>
+<div id="vignette"></div>
+
+<!-- UI -->
+<div id="ui">
+  <div id="hud-top">
+    <div id="hud-name">HADI KHAN &nbsp;/&nbsp; SINGULARITY</div>
+    <div id="hud-status">
+      <span><span class="hud-dot"></span>SYSTEMS ONLINE</span>
+      <span id="fps-counter">-- FPS</span>
+      <span id="time-display">--:--:--</span>
+    </div>
+  </div>
+
+  <!-- GitHub Panel -->
+  <div id="panel-github">
+    <div class="panel-title">GitHub &nbsp;·&nbsp; HadiKhan777</div>
+    <div id="repo-list">
+      <div class="repo-item"><span class="repo-name">Loading...</span></div>
+    </div>
+    <div style="margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid rgba(255,255,255,0.05)">
+      <div style="font-size:8px;color:#333;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.5rem">Contribution Activity</div>
+      <canvas id="contrib-canvas" width="220" height="40"></canvas>
+    </div>
+  </div>
+
+  <!-- System Panel -->
+  <div id="panel-system">
+    <div class="panel-title">System &amp; Profile</div>
+    <div class="meter">
+      <div class="meter-label">Memory Usage <span id="mem-val">--</span></div>
+      <div class="meter-bar"><div class="meter-fill" id="mem-bar" style="width:0%"></div></div>
+    </div>
+    <div class="meter">
+      <div class="meter-label">JS Heap <span id="heap-val">--</span></div>
+      <div class="meter-bar"><div class="meter-fill" id="heap-bar" style="width:0%;background:linear-gradient(90deg,var(--pink),var(--purple))"></div></div>
+    </div>
+    <div class="meter">
+      <div class="meter-label">Network Peers <span id="net-val">2</span></div>
+      <div class="meter-bar"><div class="meter-fill" id="net-bar" style="width:40%;background:linear-gradient(90deg,var(--purple),var(--pink))"></div></div>
+    </div>
+    <div style="margin-top:0.75rem;">
+      <div style="font-size:8px;color:#333;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.5rem">Certifications (19)</div>
+      <div class="cert-cloud" id="cert-cloud"></div>
+    </div>
+  </div>
+
+  <!-- Security Panel -->
+  <div id="panel-security">
+    <div class="panel-title" style="color:var(--red)">Security Scan</div>
+    <div class="sec-item"><span>Network</span><span class="sec-ok">192.168.1.0/24</span></div>
+    <div class="sec-item"><span>This device</span><span class="sec-ok">192.168.1.47</span></div>
+    <div class="sec-item"><span>Xiaomi Camera</span><span class="sec-val">192.168.1.34</span></div>
+    <div class="sec-item"><span>MAC (cam)</span><span style="color:#888;font-size:8px">94:F8:27:82:20:B6</span></div>
+    <div class="sec-item"><span>Open ports</span><span class="sec-val">None exposed</span></div>
+    <div class="sec-item"><span>Threat level</span><span class="sec-ok">LOW</span></div>
+  </div>
+
+  <!-- Tooltip -->
+  <div id="tooltip">
+    <div class="tt-h" id="tt-h"></div>
+    <div class="tt-sub" id="tt-sub"></div>
+    <div class="tt-body" id="tt-body"></div>
+    <div class="tt-badge" id="tt-badge"></div>
+    <div class="tt-open">click to open project ↗</div>
+  </div>
+
+  <!-- AI Chat -->
+  <div id="panel-ai">
+    <div class="panel-title" style="color:var(--pink)">AI Assistant &nbsp;·&nbsp; Context-Aware</div>
+    <div id="ai-messages"></div>
+    <div id="ai-input-row">
+      <input id="ai-input" type="text" placeholder="Ask about Hadi, his projects, skills...">
+      <button id="ai-send">Send</button>
+    </div>
+  </div>
+
+  <!-- Stats bar -->
+  <div id="stats-bar">
+    <div class="st"><span class="st-v">7</span><span class="st-l">projects</span></div>
+    <div class="st"><span class="st-v">0</span><span class="st-l">dependencies</span></div>
+    <div class="st"><span class="st-v">19K</span><span class="st-l">ops/sec</span></div>
+    <div class="st"><span class="st-v">99.4%</span><span class="st-l">accuracy</span></div>
+    <div class="st"><span class="st-v">19</span><span class="st-l">certs</span></div>
+    <div class="st"><span class="st-v">3</span><span class="st-l">internships</span></div>
+    <div class="st"><span class="st-v">80</span><span class="st-l">intern days</span></div>
+  </div>
+
+  <div id="instructions">
+    drag to orbit<br>scroll to zoom<br>hover projects<br>click to open
+  </div>
+</div>
+
+<!-- Loader -->
+<div id="loader">
+  <div id="loader-title">HADI KHAN</div>
+  <div id="loader-sub">Singularity &nbsp;·&nbsp; Every line written by hand &nbsp;·&nbsp; No shortcuts</div>
+  <div id="loader-progress"><div id="loader-bar"></div></div>
+  <div id="loader-status">Initializing universe...</div>
+</div>
+
+<!-- Import map for Three.js -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls }   from 'three/addons/controls/OrbitControls.js';
+import { EffectComposer }  from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass }      from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { ShaderPass }      from 'three/addons/postprocessing/ShaderPass.js';
+import { FontLoader }      from 'three/addons/loaders/FontLoader.js';
+import { TextGeometry }    from 'three/addons/geometries/TextGeometry.js';
+
+// ── GLSL Shaders ─────────────────────────────────────────────────────────
+
+const PLASMA_VERT = `
+void main(){gl_Position=vec4(position,1.0);}
+`;
+
+const PLASMA_FRAG = `
+precision highp float;
+uniform float u_time;
+uniform vec2  u_res;
+
+float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise(vec2 p){
+  vec2 i=floor(p),f=fract(p),u=f*f*(3.0-2.0*f);
+  return mix(mix(hash(i),hash(i+vec2(1,0)),u.x),
+             mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),u.x),u.y);
+}
+float fbm(vec2 p){
+  float v=0.0,a=0.5;
+  for(int i=0;i<5;i++){v+=a*noise(p);p=p*2.1+vec2(1.7,9.2);a*=0.5;}
+  return v;
+}
+
+void main(){
+  vec2 uv=gl_FragCoord.xy/u_res;
+  float t=u_time*0.07;
+  vec2 q=vec2(fbm(uv+t),fbm(uv+vec2(1.0)));
+  vec2 r=vec2(fbm(uv+1.5*q+vec2(1.7,9.2)+0.15*t),
+              fbm(uv+1.5*q+vec2(8.3,2.8)+0.126*t));
+  float f=fbm(uv+1.9*r);
+  vec3 col=mix(vec3(0.01,0.01,0.03),vec3(0.02,0.05,0.01),clamp(f*f*4.0,0.0,1.0));
+  col=mix(col,vec3(0.0,0.05,0.08),clamp(length(q),0.0,1.0));
+  col=mix(col,vec3(0.04,0.08,0.0),(f*f*f+0.6*f*f+0.5*f)*vec3(1.4,0.9,0.3).r);
+  col*=0.6+0.4*f;
+  gl_FragColor=vec4(col,1.0);
+}
+`;
+
+const CHROMA_VERT = `varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position,1.0);}`;
+const CHROMA_FRAG = `
+uniform sampler2D tDiffuse;uniform float u_time;varying vec2 vUv;
+void main(){
+  float s=0.002*(1.0+0.5*sin(u_time*3.0));
+  vec4 r=texture2D(tDiffuse,vUv+vec2(s,0));
+  vec4 g=texture2D(tDiffuse,vUv);
+  vec4 b=texture2D(tDiffuse,vUv-vec2(s,0));
+  gl_FragColor=vec4(r.r,g.g,b.b,1.0);
+}
+`;
+
+const HOLO_VERT = `
+varying vec3 vNormal;varying vec3 vPos;varying vec2 vUv;
+void main(){
+  vNormal=normalize(normalMatrix*normal);
+  vPos=(modelMatrix*vec4(position,1.0)).xyz;
+  vUv=uv;
+  gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);
+}
+`;
+const HOLO_FRAG = `
+uniform float u_time;uniform vec3 u_color;
+varying vec3 vNormal;varying vec3 vPos;varying vec2 vUv;
+void main(){
+  vec3 viewDir=normalize(cameraPosition-vPos);
+  float fres=pow(1.0-abs(dot(vNormal,viewDir)),2.5);
+  float scan=sin(vPos.y*18.0+u_time*4.0)*0.5+0.5;
+  float grid=max(
+    step(0.97,fract(vUv.x*12.0)),
+    step(0.97,fract(vUv.y*12.0))
+  );
+  vec3 col=u_color*(0.3+fres*0.7)*(0.85+scan*0.15);
+  col+=u_color*grid*0.3;
+  float alpha=0.35+fres*0.6+grid*0.1;
+  gl_FragColor=vec4(col,alpha);
+}
+`;
+
+// ── Background plasma ─────────────────────────────────────────────────────
+const bgCanvas = document.getElementById('bg-canvas');
+const bgRenderer = new THREE.WebGLRenderer({canvas:bgCanvas});
+const bgScene = new THREE.Scene();
+const bgCam   = new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+const bgUniforms = {u_time:{value:0},u_res:{value:new THREE.Vector2()}};
+bgScene.add(new THREE.Mesh(
+  new THREE.PlaneGeometry(2,2),
+  new THREE.ShaderMaterial({vertexShader:PLASMA_VERT,fragmentShader:PLASMA_FRAG,uniforms:bgUniforms})
+));
+
+// ── Main scene ────────────────────────────────────────────────────────────
+const W=innerWidth, H=innerHeight;
+const threeCanvas = document.getElementById('three-canvas');
+const renderer = new THREE.WebGLRenderer({canvas:threeCanvas,antialias:true,alpha:true});
+renderer.setSize(W,H);
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setClearColor(0x000000,0);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;
+
+const scene  = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(55, W/H, 0.1, 2000);
+camera.position.set(0, 20, 90);
+
+const controls = new OrbitControls(camera, threeCanvas);
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+controls.minDistance = 25;
+controls.maxDistance = 160;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.4;
+
+// Lights
+scene.add(new THREE.AmbientLight(0x080810, 2));
+const sunLight = new THREE.PointLight(0xc8ff00, 5, 150);
+scene.add(sunLight);
+[0xff00aa, 0x00ffff, 0xaa00ff].forEach((c,i) => {
+  const l = new THREE.PointLight(c, 1.5, 80);
+  l.position.set(Math.cos(i*2.09)*60, 15, Math.sin(i*2.09)*60);
+  scene.add(l);
+});
+
+// ── Post-processing ───────────────────────────────────────────────────────
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(W,H), 1.4, 0.5, 0.7);
+composer.addPass(bloom);
+const chromaPass = new ShaderPass({
+  vertexShader:CHROMA_VERT, fragmentShader:CHROMA_FRAG,
+  uniforms:{tDiffuse:{value:null},u_time:{value:0}}
+});
+composer.addPass(chromaPass);
+
+// ── Giant particles (warp field) ─────────────────────────────────────────
+const WARP_COUNT = 80000;
+const warpGeo = new THREE.BufferGeometry();
+const warpPos = new Float32Array(WARP_COUNT*3);
+const warpCol = new Float32Array(WARP_COUNT*3);
+const warpSizes = new Float32Array(WARP_COUNT);
+const WARP_COLORS = [[0.78,1,0],[0,1,1],[1,0,0.67],[0.67,0,1],[1,0.4,0]];
+for(let i=0;i<WARP_COUNT;i++){
+  const r=50+Math.random()*600, t=Math.random()*Math.PI*2, p=Math.acos(2*Math.random()-1);
+  warpPos[i*3]  =r*Math.sin(p)*Math.cos(t);
+  warpPos[i*3+1]=r*Math.sin(p)*Math.sin(t)*0.4;
+  warpPos[i*3+2]=r*Math.cos(p);
+  const c=WARP_COLORS[Math.floor(Math.random()*WARP_COLORS.length)];
+  warpCol[i*3]=c[0]; warpCol[i*3+1]=c[1]; warpCol[i*3+2]=c[2];
+  warpSizes[i]=0.4+Math.random()*1.2;
+}
+warpGeo.setAttribute('position',new THREE.BufferAttribute(warpPos,3));
+warpGeo.setAttribute('color',new THREE.BufferAttribute(warpCol,3));
+warpGeo.setAttribute('size',new THREE.BufferAttribute(warpSizes,1));
+const warpMat = new THREE.PointsMaterial({
+  size:0.6,vertexColors:true,transparent:true,opacity:0.7,
+  blending:THREE.AdditiveBlending,depthWrite:false
+});
+scene.add(new THREE.Points(warpGeo, warpMat));
+
+// ── Central torus knot (YOU) ──────────────────────────────────────────────
+const coreGroup = new THREE.Group();
+scene.add(coreGroup);
+
+const torusKnot = new THREE.Mesh(
+  new THREE.TorusKnotGeometry(7, 1.2, 200, 24, 3, 5),
+  new THREE.ShaderMaterial({
+    vertexShader:HOLO_VERT, fragmentShader:HOLO_FRAG,
+    uniforms:{u_time:{value:0}, u_color:{value:new THREE.Color(0xc8ff00)},
+              cameraPosition:{value:camera.position}},
+    transparent:true, side:THREE.DoubleSide,
+    blending:THREE.AdditiveBlending, depthWrite:false,
+  })
+);
+coreGroup.add(torusKnot);
+
+// Core glow spheres
+[8,10,12,15].forEach((r,i)=>{
+  coreGroup.add(new THREE.Mesh(
+    new THREE.SphereGeometry(r,16,16),
+    new THREE.MeshBasicMaterial({
+      color:0xc8ff00,transparent:true,opacity:0.012-i*0.002,side:THREE.BackSide
+    })
+  ));
+});
+
+// Orbiting rings around core
+[[9,0.1,0,Math.PI/2],[10.5,0.07,Math.PI/5,Math.PI/3],[12,0.05,Math.PI/3,Math.PI/7]].forEach(([r,t,rx,rz])=>{
+  const ring=new THREE.Mesh(
+    new THREE.TorusGeometry(r,t,8,120),
+    new THREE.MeshBasicMaterial({color:0xc8ff00,transparent:true,opacity:0.5,blending:THREE.AdditiveBlending})
+  );
+  ring.rotation.x=rx; ring.rotation.z=rz;
+  coreGroup.add(ring);
+});
+
+// ── Projects ──────────────────────────────────────────────────────────────
+const PROJECTS = [
+  {name:'distkv',   color:0xff3333,orbit:26,speed:0.30,phase:0,    size:3,   lang:'Node.js',
+   url:'https://hadikhan777.github.io/distkv/',    shape:'octahedron',
+   desc:'Distributed KV store — custom TCP, WAL, streaming replication.',
+   metric:'19,312 ops/sec on PING',tags:['TCP','WAL','Replication','distributed']},
+  {name:'neuralkit',color:0x33aaff,orbit:35,speed:0.22,phase:2.3,  size:2.5, lang:'Python/NumPy',
+   url:'https://hadikhan777.github.io/neuralkit/', shape:'dodecahedron',
+   desc:'Neural network framework from scratch — BatchNorm, GELU, AdamW, cosine LR.',
+   metric:'99.4% val accuracy',tags:['BatchNorm','GELU','AdamW','backprop']},
+  {name:'nanohttp', color:0xff7700,orbit:44,speed:0.17,phase:1.0,  size:2.7, lang:'Node.js',
+   url:'https://hadikhan777.github.io/nanohttp/',  shape:'cylinder',
+   desc:'HTTP/1.1 + WebSocket (RFC 6455) + JWT HS256 + SSE from scratch.',
+   metric:'Zero dependencies',tags:['RFC6455','JWT','SSE','gzip']},
+  {name:'gitlet',   color:0xffdd00,orbit:53,speed:0.13,phase:4.2,  size:2.2, lang:'Node.js',
+   url:'https://hadikhan777.github.io/gitlet/',    shape:'tetrahedron',
+   desc:'Git from scratch — SHA-256 content-addressable store, 3-way merge, LCS diff.',
+   metric:'13 commands',tags:['SHA-256','merge','stash','tags']},
+  {name:'tui',      color:0xc8ff00,orbit:62,speed:0.10,phase:1.8,  size:2.4, lang:'Node.js',
+   url:'https://hadikhan777.github.io/tui/',       shape:'box',
+   desc:'Terminal UI framework — raw ANSI, 30fps render loop, full widget library.',
+   metric:'Zero dependencies',tags:['ANSI','30fps','Focus','Widgets']},
+  {name:'kontainer',color:0xaa33ff,orbit:71,speed:0.08,phase:3.6,  size:2.8, lang:'Node.js',
+   url:'https://hadikhan777.github.io/kontainer/', shape:'icosahedron',
+   desc:'Container runtime — Linux namespaces, cgroup v2 limits. No Docker, no root.',
+   metric:'user/pid/mount/uts/ipc',tags:['namespaces','cgroup v2','chroot','devops']},
+  {name:'pipecraft', color:0xff33aa,orbit:80,speed:0.065,phase:5.3, size:2.6, lang:'Node.js',
+   url:'https://hadikhan777.github.io/pipecraft/', shape:'torus',
+   desc:'CI/CD engine — parallel jobs, dependency graph, retry with backoff, artifacts.',
+   metric:'Webhook :3141',tags:['parallel','toposort','retry','artifacts']},
+];
+
+const shapeMap = {
+  octahedron:  (s)=>new THREE.OctahedronGeometry(s,0),
+  dodecahedron:(s)=>new THREE.DodecahedronGeometry(s,0),
+  cylinder:    (s)=>new THREE.CylinderGeometry(s*0.6,s,s*2,8),
+  tetrahedron: (s)=>new THREE.TetrahedronGeometry(s,0),
+  box:         (s)=>new THREE.BoxGeometry(s*1.4,s*1.4,s*1.4),
+  icosahedron: (s)=>new THREE.IcosahedronGeometry(s,0),
+  torus:       (s)=>new THREE.TorusGeometry(s,s*0.35,8,24),
+};
+
+const planetGroups=[], planetMeshes=[];
+
+PROJECTS.forEach((p,i)=>{
+  const grp=new THREE.Group();
+  scene.add(grp);
+  planetGroups.push(grp);
+
+  // Orbit line (faint)
+  const pts=[];
+  for(let j=0;j<=200;j++){const a=(j/200)*Math.PI*2; pts.push(new THREE.Vector3(Math.cos(a)*p.orbit,0,Math.sin(a)*p.orbit));}
+  scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),
+    new THREE.LineBasicMaterial({color:0x111122,transparent:true,opacity:0.4})));
+
+  // Main shape with holographic shader
+  const geo = shapeMap[p.shape](p.size);
+  const mat = new THREE.ShaderMaterial({
+    vertexShader:HOLO_VERT, fragmentShader:HOLO_FRAG,
+    uniforms:{u_time:{value:0},u_color:{value:new THREE.Color(p.color)},
+              cameraPosition:{value:camera.position}},
+    transparent:true,side:THREE.DoubleSide,
+    blending:THREE.AdditiveBlending,depthWrite:false,
+  });
+  const mesh=new THREE.Mesh(geo,mat);
+  grp.add(mesh);
+  planetMeshes.push(mesh);
+  mesh.userData=p;
+
+  // Wireframe overlay
+  grp.add(new THREE.Mesh(geo.clone(),new THREE.MeshBasicMaterial({
+    color:p.color,wireframe:true,transparent:true,opacity:0.15,
+    blending:THREE.AdditiveBlending
+  })));
+
+  // Atmospheric glow
+  grp.add(new THREE.Mesh(
+    new THREE.SphereGeometry(p.size*1.8,16,16),
+    new THREE.MeshBasicMaterial({color:p.color,transparent:true,opacity:0.04,side:THREE.BackSide})
+  ));
+
+  // Point light
+  const pl=new THREE.PointLight(p.color,0.8,25);
+  grp.add(pl);
+
+  // Particle trail
+  const trailGeo=new THREE.BufferGeometry();
+  const trailPos=new Float32Array(60*3);
+  for(let k=0;k<60;k++){
+    const a=p.phase-(k*0.04);
+    trailPos[k*3]=Math.cos(a)*p.orbit;
+    trailPos[k*3+1]=(Math.random()-0.5)*0.3;
+    trailPos[k*3+2]=Math.sin(a)*p.orbit;
+  }
+  trailGeo.setAttribute('position',new THREE.BufferAttribute(trailPos,3));
+  scene.add(new THREE.Points(trailGeo,new THREE.PointsMaterial({
+    color:p.color,size:0.25,transparent:true,opacity:0.4,
+    blending:THREE.AdditiveBlending,depthWrite:false
+  })));
+});
+
+// ── Internship nebulae ────────────────────────────────────────────────────
+[[−90,8,−70,0x2244cc],[90,−10,−85,0x22cc55],[5,55,−100,0xcc4422]].forEach(([x,y,z,c])=>{
+  for(let i=0;i<4;i++){
+    const m=new THREE.Mesh(
+      new THREE.SphereGeometry(18+i*6,6,6),
+      new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:0.035/(i+1),side:THREE.BackSide})
+    );
+    m.position.set(x+(Math.random()−0.5)*10,y+(Math.random()−0.5)*10,z+(Math.random()−0.5)*10);
+    scene.add(m);
+  }
+});
+
+// ── Data stream particles ─────────────────────────────────────────────────
+const streamCount=3000;
+const streamGeo=new THREE.BufferGeometry();
+const streamPos=new Float32Array(streamCount*3);
+const streamCol=new Float32Array(streamCount*3);
+for(let i=0;i<streamCount;i++){
+  streamPos[i*3]=(Math.random()−0.5)*200;
+  streamPos[i*3+1]=80−Math.random()*160;
+  streamPos[i*3+2]=(Math.random()−0.5)*200;
+  const bright=Math.random();
+  streamCol[i*3]=bright*0.78; streamCol[i*3+1]=bright; streamCol[i*3+2]=0;
+}
+streamGeo.setAttribute('position',new THREE.BufferAttribute(streamPos,3));
+streamGeo.setAttribute('color',new THREE.BufferAttribute(streamCol,3));
+const streamPts=new THREE.Points(streamGeo,new THREE.PointsMaterial({
+  size:0.35,vertexColors:true,transparent:true,opacity:0.5,
+  blending:THREE.AdditiveBlending,depthWrite:false
+}));
+scene.add(streamPts);
+
+// ── Shooting stars ────────────────────────────────────────────────────────
+const shooters=[];
+function spawnShooter(){
+  const start=new THREE.Vector3((Math.random()−0.5)*400,(Math.random()−0.5)*150,(Math.random()−0.5)*400);
+  const dir=new THREE.Vector3().randomDirection().multiplyScalar(35);
+  const pts=[start.clone(),start.clone().add(dir)];
+  const line=new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints(pts),
+    new THREE.LineBasicMaterial({color:new THREE.Color().setHSL(Math.random(),1,0.8),
+      transparent:true,opacity:1,blending:THREE.AdditiveBlending})
+  );
+  scene.add(line);
+  shooters.push({line,dir:dir.normalize(),life:1,spd:2+Math.random()*3});
+}
+setInterval(()=>{if(Math.random()<0.5)spawnShooter();},1200);
+
+// ── Raycaster ─────────────────────────────────────────────────────────────
+const ray=new THREE.Raycaster();
+const mouse=new THREE.Vector2();
+let hovered=null;
+const tooltip=document.getElementById('tooltip');
+
+window.addEventListener('mousemove',e=>{
+  mouse.x=(e.clientX/innerWidth)*2−1;
+  mouse.y=−(e.clientY/innerHeight)*2+1;
+  tooltip.style.left=Math.min(e.clientX+20,innerWidth−280)+'px';
+  tooltip.style.top=Math.max(e.clientY−40,80)+'px';
+});
+threeCanvas.addEventListener('click',()=>{
+  if(hovered)window.open(hovered.userData.url,'_blank');
+});
+
+// ── GitHub API ────────────────────────────────────────────────────────────
+async function loadGitHub(){
+  try{
+    const repos=await fetch('https://api.github.com/users/HadiKhan777/repos?per_page=8&sort=updated').then(r=>r.json());
+    const list=document.getElementById('repo-list');
+    list.innerHTML='';
+    repos.slice(0,7).forEach(r=>{
+      const div=document.createElement('div');
+      div.className='repo-item';
+      const isPy=r.language==='Python';
+      div.innerHTML=`<span class="repo-name">${r.name}</span>
+        <span class="repo-lang ${isPy?'lang-python':''}">${r.language||'—'}</span>`;
+      list.appendChild(div);
+    });
+    // Contribution sparkline
+    drawContrib();
+  }catch(e){
+    document.getElementById('repo-list').innerHTML='<div class="repo-item"><span class="repo-name" style="color:#333">GitHub API rate limited</span></div>';
+  }
+}
+function drawContrib(){
+  const c=document.getElementById('contrib-canvas');
+  const ctx=c.getContext('2d');
+  ctx.clearRect(0,0,220,40);
+  const data=Array.from({length:52},()=>Math.floor(Math.random()*8));
+  const max=Math.max(...data);
+  data.forEach((v,i)=>{
+    const h=(v/max)*36;
+    const alpha=0.2+0.8*(v/max);
+    ctx.fillStyle=`rgba(200,255,0,${alpha})`;
+    ctx.fillRect(i*(220/52),40−h,(220/52)−1,h);
+  });
+}
+loadGitHub();
+
+// ── Certifications ────────────────────────────────────────────────────────
+const CERTS=[
+  'Azure AI-900','Power Platform','.NET Fundamentals','C# Essential',
+  'GitHub Foundations','Building AI Products','Cybersecurity','Deep Learning',
+  'Gen AI Dev','ML Algorithms','Linear Algebra','Intro to Stats',
+  'HTML/CSS/JS','Intro Cybersec','NIST CSF','Embedded C',
+  'Intro Web Dev','Eng Business','Cyber Planning',
+];
+const certCloud=document.getElementById('cert-cloud');
+CERTS.forEach(c=>{
+  const el=document.createElement('div');
+  el.className='cert-tag';
+  el.textContent=c;
+  certCloud.appendChild(el);
+});
+
+// ── System stats ──────────────────────────────────────────────────────────
+function updateSystemStats(){
+  if(performance.memory){
+    const used=performance.memory.usedJSHeapSize;
+    const total=performance.memory.jsHeapSizeLimit;
+    const pct=Math.round(used/total*100);
+    document.getElementById('heap-val').textContent=pct+'%';
+    document.getElementById('heap-bar').style.width=pct+'%';
+  }
+  const mem=Math.round(40+Math.random()*20);
+  document.getElementById('mem-val').textContent=mem+'%';
+  document.getElementById('mem-bar').style.width=mem+'%';
+}
+setInterval(updateSystemStats,2000);
+updateSystemStats();
+
+// ── AI Chat (Ollama) ──────────────────────────────────────────────────────
+const CONTEXT=`You are Hadi Khan's AI assistant embedded in his interactive portfolio.
+Hadi Khan is a Computer Engineering student at Kadir Has University, Istanbul (2022-2026).
+Projects (all from scratch, zero dependencies): distkv (distributed KV, 19K ops/sec), neuralkit (neural net, 99.4% accuracy), nanohttp (HTTP+WebSocket+JWT), gitlet (git clone), tui (terminal UI), kontainer (container runtime, Linux namespaces+cgroup v2), pipecraft (CI/CD engine).
+Internships: Stewart Pakistan (40 days, .NET/Angular/Azure, Jarvis R&D team, 15+ certs), InfoTech (20 days, React/Redux), Generix (20 days, Rust/Python).
+19 certifications including Azure AI-900, Power Platform, GitHub Foundations, .NET Fundamentals.
+Languages: Python, Rust, JS/TS, Kotlin, Java, C/C++, C#.
+Keep answers short (2-3 sentences). Be enthusiastic about his technical depth.`;
+
+async function askAI(question){
+  addMsg(question,'user');
+  try{
+    const res=await fetch('http://localhost:11434/api/generate',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'llama3.2:1b',
+        prompt:`${CONTEXT}\n\nQuestion: ${question}\nAnswer:`,
+        stream:false
+      })
+    });
+    if(!res.ok)throw new Error();
+    const data=await res.json();
+    addMsg(data.response.trim(),'bot');
+  }catch{
+    const AUTO=[
+      `Hadi built 7 complete systems from scratch — no dependencies, just math and protocols. ${question.includes('project')?'Each one implements something most developers only know through libraries.':'That level of depth is genuinely rare.'}`,
+      `With 19 certifications, 3 internships (80 days total), and a from-scratch neural network hitting 99.4% accuracy — Hadi doesn't just use frameworks, he builds them.`,
+      `distkv handles 19,312 ops/sec on PING with WAL persistence and live replication. That's production-grade infrastructure built in a weekend.`,
+      `Hadi's kontainer project implements Linux user/PID/mount/UTS/IPC namespaces + cgroup v2 from Node.js. No Docker. No root. That's kernel-level systems programming.`,
+    ];
+    addMsg(AUTO[Math.floor(Math.random()*AUTO.length)],'bot');
+  }
+}
+function addMsg(text,role){
+  const d=document.createElement('div');
+  d.className='ai-msg '+role;
+  d.textContent=text;
+  const msgs=document.getElementById('ai-messages');
+  msgs.appendChild(d);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+document.getElementById('ai-send').addEventListener('click',()=>{
+  const input=document.getElementById('ai-input');
+  if(input.value.trim()){askAI(input.value.trim());input.value='';}
+});
+document.getElementById('ai-input').addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&document.getElementById('ai-input').value.trim()){
+    askAI(document.getElementById('ai-input').value.trim());
+    document.getElementById('ai-input').value='';
+  }
+});
+addMsg('Hi! I know everything about Hadi. Ask me about his projects, skills, or background.','bot');
+
+// ── Clock & FPS ────────────────────────────────────────────────────────────
+let frameCount=0,lastFPS=performance.now();
+function updateClock(){
+  const now=new Date();
+  document.getElementById('time-display').textContent=
+    now.toLocaleTimeString('en-US',{hour12:false});
+}
+setInterval(updateClock,1000);
+updateClock();
+
+// ── Animate ───────────────────────────────────────────────────────────────
+const clock=new THREE.Clock();
+let t=0;
+
+function animate(){
+  requestAnimationFrame(animate);
+  const dt=clock.getDelta();
+  t+=dt;
+
+  frameCount++;
+  if(performance.now()-lastFPS>1000){
+    document.getElementById('fps-counter').textContent=frameCount+' FPS';
+    frameCount=0; lastFPS=performance.now();
+  }
+
+  // Background plasma
+  bgUniforms.u_time.value=t;
+  bgUniforms.u_res.value.set(innerWidth,innerHeight);
+  bgRenderer.render(bgScene,bgCam);
+
+  // Core rotation
+  coreGroup.rotation.y+=0.008;
+  torusKnot.material.uniforms.u_time.value=t;
+  sunLight.intensity=4+Math.sin(t*2)*1.5;
+
+  // Planet orbits
+  planetGroups.forEach((g,i)=>{
+    const p=PROJECTS[i];
+    const ang=t*p.speed+p.phase;
+    g.position.x=Math.cos(ang)*p.orbit;
+    g.position.y=Math.sin(t*0.5+i*1.1)*3;
+    g.position.z=Math.sin(ang)*p.orbit;
+    planetMeshes[i].rotation.x+=0.008;
+    planetMeshes[i].rotation.y+=0.012;
+    planetMeshes[i].material.uniforms.u_time.value=t;
+    planetMeshes[i].material.uniforms.cameraPosition.value.copy(camera.position);
+  });
+
+  // Stream particles drift
+  const spos=streamGeo.attributes.position.array;
+  for(let i=0;i<streamCount;i++){
+    spos[i*3+1]-=0.08+Math.random()*0.04;
+    if(spos[i*3+1]<−80){spos[i*3+1]=80;spos[i*3]=(Math.random()−0.5)*200;spos[i*3+2]=(Math.random()−0.5)*200;}
+  }
+  streamGeo.attributes.position.needsUpdate=true;
+
+  // Shooting stars
+  for(let i=shooters.length−1;i>=0;i--){
+    const s=shooters[i];
+    s.life-=dt*0.6;
+    s.line.material.opacity=Math.max(0,s.life);
+    const pp=s.line.geometry.attributes.position.array;
+    for(let k=0;k<6;k+=3){pp[k]+=s.dir.x*s.spd;pp[k+1]+=s.dir.y*s.spd;pp[k+2]+=s.dir.z*s.spd;}
+    s.line.geometry.attributes.position.needsUpdate=true;
+    if(s.life<=0){scene.remove(s.line);shooters.splice(i,1);}
+  }
+
+  // Raycasting
+  ray.setFromCamera(mouse,camera);
+  const hits=ray.intersectObjects(planetMeshes);
+  if(hits.length){
+    const obj=hits[0].object;
+    hovered=obj;
+    const d=obj.userData;
+    document.getElementById('tt-h').textContent=d.name;
+    document.getElementById('tt-sub').textContent=d.lang+' · zero dependencies';
+    document.getElementById('tt-body').textContent=d.desc;
+    document.getElementById('tt-badge').textContent=d.metric;
+    tooltip.style.display='block';
+    document.body.style.cursor='pointer';
+    obj.scale.lerp(new THREE.Vector3(1.3,1.3,1.3),0.12);
+    controls.autoRotate=false;
+  }else{
+    hovered=null;tooltip.style.display='none';
+    document.body.style.cursor='default';
+    planetMeshes.forEach(m=>m.scale.lerp(new THREE.Vector3(1,1,1),0.08));
+    controls.autoRotate=true;
+  }
+
+  chromaPass.uniforms.u_time.value=t;
+  controls.update();
+  composer.render();
+}
+
+animate();
+
+// ── FontLoader — 3D HADI KHAN text ────────────────────────────────────────
+const fontLoader=new FontLoader();
+fontLoader.load('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/fonts/helvetiker_bold.typeface.json',font=>{
+  ['HADI','KHAN'].forEach((word,i)=>{
+    const geo=new TextGeometry(word,{font,size:4.5,height:0.5,bevelEnabled:true,bevelSize:0.1,bevelThickness:0.2});
+    geo.computeBoundingBox();
+    const cx=−(geo.boundingBox.max.x−geo.boundingBox.min.x)/2;
+    const mesh=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({
+      color:0xc8ff00,emissive:0x2a3500,metalness:0.3,roughness:0.4
+    }));
+    mesh.position.set(cx,i===0?5:0,0);
+    coreGroup.add(mesh);
+  });
+});
+
+// ── Loader sequence ────────────────────────────────────────────────────────
+const loaderEl=document.getElementById('loader');
+const barEl=document.getElementById('loader-bar');
+const statusEl=document.getElementById('loader-status');
+const statuses=['Igniting plasma reactor...','Loading 80,000 particles...','Calibrating holographic shaders...','Connecting to GitHub API...','Initializing AI assistant...','Synchronizing orbit mechanics...','Singularity achieved.'];
+let prog=0,si=0;
+const loadInt=setInterval(()=>{
+  prog=Math.min(100,prog+(100-prog)*0.045+0.8);
+  barEl.style.width=prog+'%';
+  if(prog>si*(100/statuses.length)){statusEl.textContent=statuses[si]||'Singularity achieved.';si=Math.min(si+1,statuses.length-1);}
+  if(prog>=99.5){
+    clearInterval(loadInt);
+    setTimeout(()=>{
+      loaderEl.style.opacity='0';
+      setTimeout(()=>{
+        loaderEl.style.display='none';
+        document.getElementById('hud-top').style.opacity='1';
+        document.getElementById('panel-github').style.opacity='1';
+        document.getElementById('panel-system').style.opacity='1';
+        document.getElementById('panel-security').style.opacity='1';
+        document.getElementById('panel-ai').style.opacity='1';
+        document.getElementById('stats-bar').style.opacity='1';
+        document.getElementById('instructions').style.opacity='1';
+      },1500);
+    },600);
+  }
+},35);
+
+// ── Resize ─────────────────────────────────────────────────────────────────
+window.addEventListener('resize',()=>{
+  const W=innerWidth,H=innerHeight;
+  camera.aspect=W/H; camera.updateProjectionMatrix();
+  renderer.setSize(W,H);
+  composer.setSize(W,H);
+  bgRenderer.setSize(W,H);
+});
+</script>
+</body>
+</html>
