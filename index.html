@@ -352,6 +352,29 @@ nav {
   transform: translate(2px, -2px);
 }
 
+.card-links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.card-src {
+  font-size: 10.5px;
+  color: var(--dim);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--border2);
+  padding-bottom: 1px;
+  transition: color 0.15s, border-color 0.15s;
+  pointer-events: all;
+}
+
+.card-src:hover {
+  color: var(--text);
+  border-color: var(--dim);
+}
+
 /* ── Numbers ── */
 .numbers-grid {
   display: grid;
@@ -586,7 +609,7 @@ footer {
   <div class="projects-grid">
 
     <!-- distkv -->
-    <a href="https://github.com/HadiKhan777/distkv" target="_blank" rel="noopener" class="card c-distkv">
+    <a href="https://hadikhan777.github.io/distkv/" target="_blank" rel="noopener" class="card c-distkv">
       <div class="card-lang">Node.js</div>
       <div class="card-name">distkv</div>
       <div class="card-desc">Distributed key-value store with a custom TCP protocol, write-ahead log, and streaming replication to N replicas. Redis-compatible surface, no Redis.</div>
@@ -601,11 +624,12 @@ footer {
   SIGKILL -9  ──►  restart  ──►  replay
   <span class="g">21 keys recovered from wal.log</span></div>
       <div class="card-badge">19,312 ops/sec on PING</div>
+      <div class="card-links"><a href="https://github.com/HadiKhan777/distkv" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
       <span class="card-arrow">↗</span>
     </a>
 
     <!-- neuralkit -->
-    <a href="https://github.com/HadiKhan777/neuralkit" target="_blank" rel="noopener" class="card c-neuralkit">
+    <a href="https://hadikhan777.github.io/neuralkit/" target="_blank" rel="noopener" class="card c-neuralkit">
       <div class="card-lang">Python / NumPy</div>
       <div class="card-name">neuralkit</div>
       <div class="card-desc">Neural network framework derived from first principles. BatchNorm, GELU, AdamW, and cosine LR. Every backward pass written from the math.</div>
@@ -618,11 +642,12 @@ footer {
 <span class="g">val_acc=1.000  [████████████████████]</span>
 lr=3.00e-05  cosine annealed</div>
       <div class="card-badge">99.4% val accuracy</div>
+      <div class="card-links"><a href="https://github.com/HadiKhan777/neuralkit" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
       <span class="card-arrow">↗</span>
     </a>
 
     <!-- nanohttp -->
-    <a href="https://github.com/HadiKhan777/nanohttp" target="_blank" rel="noopener" class="card c-nanohttp">
+    <a href="https://hadikhan777.github.io/nanohttp/" target="_blank" rel="noopener" class="card c-nanohttp">
       <div class="card-lang">Node.js</div>
       <div class="card-name">nanohttp</div>
       <div class="card-desc">HTTP/1.1 server with WebSocket (RFC 6455 framing), JWT HS256 auth, SSE, and gzip. Built on net.createServer, no http module.</div>
@@ -635,11 +660,12 @@ lr=3.00e-05  cosine annealed</div>
       <div class="card-preview"><span class="g">200</span>  POST  /auth/login   +2ms
 <span class="g">101</span>  WS   /chat  Switching
 <span class="g">200</span>  GET  /events  text/event-stream</div>
+      <div class="card-links"><a href="https://github.com/HadiKhan777/nanohttp" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
       <span class="card-arrow">↗</span>
     </a>
 
     <!-- gitlet -->
-    <a href="https://github.com/HadiKhan777/gitlet" target="_blank" rel="noopener" class="card c-gitlet">
+    <a href="https://hadikhan777.github.io/gitlet/" target="_blank" rel="noopener" class="card c-gitlet">
       <div class="card-lang">Node.js</div>
       <div class="card-name">gitlet</div>
       <div class="card-desc">Git from scratch. SHA-256 content-addressable store, nested Merkle trees, 3-way merge, LCS unified diff, stash, tags, reset.</div>
@@ -651,11 +677,12 @@ lr=3.00e-05  cosine annealed</div>
       <div class="card-preview"><span class="g">a4f2c31</span> (HEAD) add feature
 <span class="g">19df353</span> initial commit
 Fast-forward complete</div>
+      <div class="card-links"><a href="https://github.com/HadiKhan777/gitlet" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
       <span class="card-arrow">↗</span>
     </a>
 
     <!-- tui -->
-    <a href="https://github.com/HadiKhan777/tui" target="_blank" rel="noopener" class="card c-tui">
+    <a href="https://hadikhan777.github.io/tui/" target="_blank" rel="noopener" class="card c-tui">
       <div class="card-lang">Node.js</div>
       <div class="card-name">tui</div>
       <div class="card-desc">Terminal UI framework on raw ANSI escape codes. 30fps render loop, focus manager, scrollable list, tabs, modal, input with cursor.</div>
@@ -667,11 +694,12 @@ Fast-forward complete</div>
       <div class="card-preview"><span class="g">┌ CPU ────────────────┐</span>
 <span class="g">│</span> [<span class="g">████████████</span>░░░░] 62%<span class="g"> │</span>
 <span class="g">└─────────────────────┘</span></div>
+      <div class="card-links"><a href="https://github.com/HadiKhan777/tui" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
       <span class="card-arrow">↗</span>
     </a>
 
     <!-- kontainer -->
-    <a href="https://github.com/HadiKhan777/kontainer" target="_blank" rel="noopener" class="card c-kontainer">
+    <a href="https://hadikhan777.github.io/kontainer/" target="_blank" rel="noopener" class="card c-kontainer">
       <div class="card-lang">Node.js</div>
       <div class="card-name">kontainer</div>
       <div class="card-desc">Container runtime using Linux user/PID/mount/UTS/IPC namespaces and cgroup v2 for memory and CPU limits. No Docker. No root required.</div>
@@ -684,11 +712,12 @@ Fast-forward complete</div>
       <div class="card-preview">unshare --user --pid --mount --uts \
   --fork --map-root-user \
   sh -c '<span class="g">chroot /rootfs $CMD</span>'</div>
+      <div class="card-links"><a href="https://github.com/HadiKhan777/kontainer" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
       <span class="card-arrow">↗</span>
     </a>
 
     <!-- pipecraft -->
-    <a href="https://github.com/HadiKhan777/pipecraft" target="_blank" rel="noopener" class="card c-pipecraft">
+    <a href="https://hadikhan777.github.io/pipecraft/" target="_blank" rel="noopener" class="card c-pipecraft">
       <div class="card-lang">Node.js</div>
       <div class="card-name">pipecraft</div>
       <div class="card-desc">CI/CD pipeline engine with parallel jobs, topological dependency resolution, retry with exponential backoff, artifact collection, and a live TUI.</div>
@@ -701,6 +730,7 @@ Fast-forward complete</div>
       <div class="card-preview"><span class="g">✓</span> lint         3.1s
 <span class="g">✓</span> test        12.4s  (parallel)
 <span class="g">⟳</span> compile     running...</div>
+      <div class="card-links"><a href="https://github.com/HadiKhan777/pipecraft" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
       <span class="card-arrow">↗</span>
     </a>
 
