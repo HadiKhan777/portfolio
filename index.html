@@ -375,6 +375,108 @@ nav {
   border-color: var(--dim);
 }
 
+/* ── Experience ── */
+.exp-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+}
+
+.exp-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2rem;
+  padding: 1.75rem 2rem;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+
+.exp-row:last-child { border-bottom: none; }
+.exp-row:hover { background: var(--s1); }
+
+.exp-role {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.2rem;
+  letter-spacing: -0.01em;
+}
+
+.exp-company {
+  font-size: 11.5px;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+  letter-spacing: 0.03em;
+}
+
+.exp-bullets {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.exp-bullets li {
+  font-size: 11.5px;
+  color: var(--dim);
+  line-height: 1.65;
+  padding-left: 1rem;
+  position: relative;
+}
+
+.exp-bullets li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+.exp-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.85rem;
+}
+
+.exp-pill {
+  font-size: 10px;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--border2);
+  color: var(--dim2);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.exp-meta {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.exp-date {
+  font-size: 11px;
+  color: var(--dim);
+  letter-spacing: 0.04em;
+  margin-bottom: 0.4rem;
+}
+
+.exp-duration {
+  font-size: 10px;
+  color: var(--dim2);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.exp-cert-badge {
+  display: inline-block;
+  margin-top: 0.75rem;
+  font-size: 10.5px;
+  color: var(--accent);
+  background: var(--accent2);
+  border: 1px solid var(--accent3);
+  padding: 0.2rem 0.55rem;
+  letter-spacing: 0.04em;
+}
+
 /* ── Numbers ── */
 .numbers-grid {
   display: grid;
@@ -521,6 +623,9 @@ footer {
 
 /* ── Mobile ── */
 @media (max-width: 900px) {
+  .exp-row { grid-template-columns: 1fr; gap: 0.5rem; }
+  .exp-meta { text-align: left; }
+
   .hero {
     grid-template-columns: 1fr;
     min-height: auto;
@@ -554,6 +659,7 @@ footer {
   <a href="#" class="nav-brand">HadiKhan777</a>
   <ul class="nav-links">
     <li><a href="#projects">projects</a></li>
+    <li><a href="#experience">experience</a></li>
     <li><a href="#numbers">numbers</a></li>
     <li><a href="https://github.com/HadiKhan777" target="_blank" rel="noopener" class="nav-gh">GitHub ↗</a></li>
   </ul>
@@ -733,6 +839,90 @@ Fast-forward complete</div>
       <div class="card-links"><a href="https://github.com/HadiKhan777/pipecraft" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
       <span class="card-arrow">↗</span>
     </a>
+
+  </div>
+</section>
+
+<!-- ── Experience ── -->
+<section class="section" id="experience">
+  <div class="section-label">Internships &nbsp;/ &nbsp;3 companies &nbsp;·&nbsp; 80 working days</div>
+  <div class="exp-list">
+
+    <!-- Stewart -->
+    <div class="exp-row reveal">
+      <div>
+        <div class="exp-role">Trainee IT Programmer Analyst</div>
+        <div class="exp-company">Stewart Pakistan Private Limited &nbsp;·&nbsp; Lahore (US firm)</div>
+        <ul class="exp-bullets">
+          <li>Selected into the elite Jarvis R&amp;D Team out of all interns after technical interview with manager</li>
+          <li>Built an Employee Offboarding Portal with Microsoft Power Platform (Power Apps, Power Automate, Copilot Studio)</li>
+          <li>Contributed to a Claim Management System using ASP.NET Core, C#, and Angular</li>
+          <li>Built SLS Client Onboarding Portal and researched AI model selection and hallucination mitigation</li>
+          <li>Earned 15+ professional certifications: Azure AI Fundamentals (AI-900), .NET, GitHub Foundations, Cybersecurity, Building AI Products</li>
+        </ul>
+        <div class="exp-pills">
+          <span class="exp-pill">C#</span>
+          <span class="exp-pill">ASP.NET Core</span>
+          <span class="exp-pill">Angular</span>
+          <span class="exp-pill">Power Platform</span>
+          <span class="exp-pill">Azure AI</span>
+          <span class="exp-pill">Prompt Engineering</span>
+        </div>
+        <span class="exp-cert-badge">15+ certifications earned</span>
+      </div>
+      <div class="exp-meta">
+        <div class="exp-date">Jul 2025 &nbsp;–&nbsp; Sep 2025</div>
+        <div class="exp-duration">40 days</div>
+      </div>
+    </div>
+
+    <!-- InfoTech -->
+    <div class="exp-row reveal">
+      <div>
+        <div class="exp-role">React Developer Intern</div>
+        <div class="exp-company">InfoTech Group &nbsp;·&nbsp; Lahore, Pakistan</div>
+        <ul class="exp-bullets">
+          <li>Built reusable React component library integrated with live REST APIs, eliminating redundant code across three product pages</li>
+          <li>Progressed from React fundamentals to Redux state management, React Router, and live API integration in 4 weeks</li>
+          <li>Shipped projects: Counter App, To-Do List (localStorage), Weather App (live API), Quiz App, CRUD app with Dashboard</li>
+        </ul>
+        <div class="exp-pills">
+          <span class="exp-pill">React</span>
+          <span class="exp-pill">Redux</span>
+          <span class="exp-pill">React Router</span>
+          <span class="exp-pill">REST APIs</span>
+          <span class="exp-pill">JavaScript</span>
+        </div>
+      </div>
+      <div class="exp-meta">
+        <div class="exp-date">Jul 2025 &nbsp;–&nbsp; Aug 2025</div>
+        <div class="exp-duration">20 days</div>
+      </div>
+    </div>
+
+    <!-- Generix -->
+    <div class="exp-row reveal">
+      <div>
+        <div class="exp-role">Software Engineering Intern</div>
+        <div class="exp-company">Generix Solutions &nbsp;·&nbsp; Remote</div>
+        <ul class="exp-bullets">
+          <li>Built a CLI Log Parser in Rust with real-time filtering by severity, keyword search, and visual bar chart reporting</li>
+          <li>Developed a CSV Data Validator in Python with regex-based format checking and duplicate detection</li>
+          <li>Co-developed System Monitor Pro as final group project — Rust/Actix-Web backend serving live CPU, memory, disk, and network metrics via REST; Python/Flask frontend with 7 interactive tabs and SVG gauge visualisations</li>
+        </ul>
+        <div class="exp-pills">
+          <span class="exp-pill">Rust</span>
+          <span class="exp-pill">Python</span>
+          <span class="exp-pill">Actix-Web</span>
+          <span class="exp-pill">Flask</span>
+          <span class="exp-pill">CLI tooling</span>
+        </div>
+      </div>
+      <div class="exp-meta">
+        <div class="exp-date">Jan 2026</div>
+        <div class="exp-duration">20 days</div>
+      </div>
+    </div>
 
   </div>
 </section>
