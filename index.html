@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hadi Khan</title>
+<style>
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Tokens ── */
+:root {
+  --bg:      #080808;
+  --s1:      #111111;
+  --s2:      #181818;
+  --border:  #252525;
+  --border2: #333333;
+  --text:    #e0e0e0;
+  --dim:     #585858;
+  --dim2:    #404040;
+  --accent:  #c8ff00;
+  --accent2: rgba(200,255,0,0.08);
+  --accent3: rgba(200,255,0,0.18);
+  --mono: 'JetBrains Mono','Fira Code','Cascadia Code','SF Mono','Consolas',monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 13.5px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── Nav ── */
+nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 100;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2.5rem;
+  border-bottom: 1px solid var(--border);
+  background: rgba(8,8,8,0.9);
+  backdrop-filter: blur(16px);
+}
+
+.nav-brand {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  align-items: center;
+}
+
+.nav-links a {
+  color: var(--dim);
+  text-decoration: none;
+  font-size: 11.5px;
+  letter-spacing: 0.05em;
+  transition: color 0.15s;
+}
+
+.nav-links a:hover { color: var(--text); }
+
+.nav-gh {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--accent) !important;
+  border: 1px solid var(--border2);
+  padding: 0.3rem 0.75rem;
+  font-size: 11px !important;
+  transition: border-color 0.15s, background 0.15s !important;
+}
+
+.nav-gh:hover {
+  border-color: var(--accent) !important;
+  background: var(--accent2) !important;
+  color: var(--accent) !important;
+}
+
+/* ── Hero ── */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100dvh;
+  padding-top: 52px;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero-l {
+  padding: 4.5rem 3rem 4.5rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-right: 1px solid var(--border);
+}
+
+.hero-r {
+  padding: 4.5rem 2.5rem 4.5rem 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.hero-name {
+  font-size: clamp(3.75rem, 7vw, 7.5rem);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+  color: var(--text);
+  margin-bottom: 2.25rem;
+}
+
+.hero-name .accent { color: var(--accent); }
+
+.cursor-block {
+  display: inline-block;
+  width: 0.55em;
+  height: 0.88em;
+  background: var(--accent);
+  vertical-align: baseline;
+  margin-left: 0.05em;
+  animation: blink 1.1s step-end infinite;
+}
+
+@keyframes blink { 50% { opacity: 0; } }
+
+.hero-sub {
+  font-size: 13px;
+  color: var(--dim);
+  line-height: 1.75;
+  max-width: 42ch;
+  margin-bottom: 2.25rem;
+}
+
+.hero-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.chip {
+  font-size: 10.5px;
+  color: var(--dim);
+  border: 1px solid var(--border2);
+  padding: 0.25rem 0.65rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+/* Stats 2x2 */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.stat {
+  background: var(--s1);
+  padding: 1.75rem 1.5rem;
+}
+
+.stat-val {
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.45rem;
+}
+
+.stat-lbl {
+  font-size: 10.5px;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+}
+
+.hero-note {
+  font-size: 11.5px;
+  color: var(--dim2);
+  line-height: 1.9;
+  border-left: 2px solid var(--border2);
+  padding-left: 1rem;
+}
+
+/* ── Shared section padding ── */
+.section {
+  padding: 4rem 2.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-label {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--dim);
+  margin-bottom: 2.5rem;
+}
+
+.section-title {
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 2.75rem;
+}
+
+/* ── Projects grid ── */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.card {
+  background: var(--s1);
+  padding: 1.75rem 2rem 1.75rem;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  transition: background 0.18s;
+  min-height: 260px;
+}
+
+.card:hover { background: var(--s2); }
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s cubic-bezier(0.16,1,0.3,1);
+}
+
+.card:hover::before { transform: scaleX(1); }
+
+.c-distkv    { grid-column: span 7; }
+.c-neuralkit { grid-column: span 5; }
+.c-nanohttp  { grid-column: span 4; }
+.c-gitlet    { grid-column: span 4; }
+.c-tui       { grid-column: span 4; }
+.c-kontainer { grid-column: span 6; }
+.c-pipecraft { grid-column: span 6; }
+
+.card-lang {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+
+.card-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.6rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.card-desc {
+  font-size: 11.5px;
+  color: var(--dim);
+  line-height: 1.65;
+  margin-bottom: 1.1rem;
+  max-width: 46ch;
+}
+
+.card-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: auto;
+}
+
+.card-pill {
+  font-size: 10px;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--border2);
+  color: var(--dim2);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.card-preview {
+  margin-top: 1.25rem;
+  font-size: 11px;
+  color: var(--dim2);
+  line-height: 1.6;
+  white-space: pre;
+  overflow: hidden;
+  font-family: var(--mono);
+  transition: color 0.18s;
+}
+
+.card:hover .card-preview { color: #505050; }
+.card-preview .g { color: #2e4800; transition: color 0.18s; }
+.card:hover .card-preview .g { color: #4d7a00; }
+
+.card-badge {
+  display: inline-block;
+  margin-top: 0.85rem;
+  font-size: 10.5px;
+  color: var(--accent);
+  background: var(--accent2);
+  border: 1px solid var(--accent3);
+  padding: 0.2rem 0.55rem;
+  letter-spacing: 0.04em;
+}
+
+.card-arrow {
+  position: absolute;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  color: var(--dim2);
+  font-size: 16px;
+  transition: color 0.18s, transform 0.18s;
+  line-height: 1;
+}
+
+.card:hover .card-arrow {
+  color: var(--accent);
+  transform: translate(2px, -2px);
+}
+
+/* ── Numbers ── */
+.numbers-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.num-cell {
+  background: var(--s1);
+  padding: 2rem 1.75rem;
+}
+
+.num-val {
+  font-size: clamp(1.9rem, 3vw, 2.6rem);
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.6rem;
+}
+
+.num-ctx {
+  font-size: 11px;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  line-height: 1.65;
+}
+
+/* ── Approach ── */
+.approach-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--border);
+}
+
+.approach-row {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+
+.approach-row:last-child { border-bottom: none; }
+.approach-row:hover { background: var(--s1); }
+
+.approach-num {
+  padding: 1.75rem 0 1.75rem 1.5rem;
+  font-size: 10.5px;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: flex-start;
+  padding-top: 1.85rem;
+}
+
+.approach-body {
+  padding: 1.75rem 2rem 1.75rem 1rem;
+  border-left: 1px solid var(--border);
+}
+
+.approach-heading {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.45rem;
+}
+
+.approach-text {
+  font-size: 12px;
+  color: var(--dim);
+  line-height: 1.75;
+  max-width: 72ch;
+}
+
+/* ── Stack ── */
+.stack-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.stack-item {
+  background: var(--s1);
+  padding: 1.25rem 1.5rem;
+}
+
+.stack-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.2rem;
+}
+
+.stack-detail {
+  font-size: 10.5px;
+  color: var(--dim);
+  letter-spacing: 0.04em;
+}
+
+/* ── Footer ── */
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.75rem 2.5rem;
+}
+
+.footer-left {
+  font-size: 11.5px;
+  color: var(--dim);
+}
+
+.footer-right a {
+  font-size: 12px;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.footer-right a:hover { text-decoration: underline; }
+
+/* ── Reveal animation ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+
+.reveal.in { opacity: 1; transform: none; }
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .cursor-block { animation: none; }
+  .card::before { transition: none; }
+}
+
+/* ── Mobile ── */
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+  .hero-l {
+    padding: 3.5rem 1.5rem 2.5rem;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-r { padding: 2.5rem 1.5rem 3.5rem; }
+  .hero-name { font-size: 3.75rem; }
+  .section { padding: 3rem 1.5rem; }
+  nav { padding: 0 1.5rem; }
+  .projects-grid {
+    grid-template-columns: 1fr;
+    background: var(--border);
+  }
+  .c-distkv, .c-neuralkit, .c-nanohttp,
+  .c-gitlet, .c-tui, .c-kontainer, .c-pipecraft {
+    grid-column: span 1;
+  }
+  .numbers-grid { grid-template-columns: repeat(2, 1fr); }
+  footer { flex-direction: column; gap: 0.75rem; align-items: flex-start; padding: 1.75rem 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<nav>
+  <a href="#" class="nav-brand">HadiKhan777</a>
+  <ul class="nav-links">
+    <li><a href="#projects">projects</a></li>
+    <li><a href="#numbers">numbers</a></li>
+    <li><a href="https://github.com/HadiKhan777" target="_blank" rel="noopener" class="nav-gh">GitHub ↗</a></li>
+  </ul>
+</nav>
+
+<!-- ── Hero ── -->
+<header class="hero">
+  <div class="hero-l">
+    <div class="hero-name">
+      HADI<br><span class="accent">KHAN</span><span class="cursor-block"></span>
+    </div>
+    <p class="hero-sub">
+      Builds systems from scratch. Every protocol written by hand. Seven projects, zero runtime dependencies.
+    </p>
+    <div class="hero-chips">
+      <span class="chip">distributed systems</span>
+      <span class="chip">networking</span>
+      <span class="chip">devops</span>
+      <span class="chip">machine learning</span>
+      <span class="chip">linux internals</span>
+    </div>
+  </div>
+
+  <div class="hero-r">
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-val">7</div>
+        <div class="stat-lbl">projects built<br>from scratch</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">0</div>
+        <div class="stat-lbl">runtime<br>dependencies</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">19K</div>
+        <div class="stat-lbl">ops/sec<br>TCP pipelined</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">99.4%</div>
+        <div class="stat-lbl">val accuracy<br>NumPy only</div>
+      </div>
+    </div>
+    <p class="hero-note">
+      Node.js &nbsp;·&nbsp; Python &nbsp;·&nbsp; Linux<br>
+      github.com/HadiKhan777
+    </p>
+  </div>
+</header>
+
+<!-- ── Projects ── -->
+<section class="section" id="projects">
+  <div class="section-label">Selected work &nbsp;/ &nbsp;7 repositories</div>
+  <div class="projects-grid">
+
+    <!-- distkv -->
+    <a href="https://github.com/HadiKhan777/distkv" target="_blank" rel="noopener" class="card c-distkv">
+      <div class="card-lang">Node.js</div>
+      <div class="card-name">distkv</div>
+      <div class="card-desc">Distributed key-value store with a custom TCP protocol, write-ahead log, and streaming replication to N replicas. Redis-compatible surface, no Redis.</div>
+      <div class="card-pills">
+        <span class="card-pill">TCP</span>
+        <span class="card-pill">WAL</span>
+        <span class="card-pill">replication</span>
+        <span class="card-pill">distributed</span>
+      </div>
+      <div class="card-preview"><span class="g">primary  replica-001  replica-002</span>
+  SET ──► WAL flush ──► fan-out to all
+  SIGKILL -9  ──►  restart  ──►  replay
+  <span class="g">21 keys recovered from wal.log</span></div>
+      <div class="card-badge">19,312 ops/sec on PING</div>
+      <span class="card-arrow">↗</span>
+    </a>
+
+    <!-- neuralkit -->
+    <a href="https://github.com/HadiKhan777/neuralkit" target="_blank" rel="noopener" class="card c-neuralkit">
+      <div class="card-lang">Python / NumPy</div>
+      <div class="card-name">neuralkit</div>
+      <div class="card-desc">Neural network framework derived from first principles. BatchNorm, GELU, AdamW, and cosine LR. Every backward pass written from the math.</div>
+      <div class="card-pills">
+        <span class="card-pill">backprop</span>
+        <span class="card-pill">BatchNorm</span>
+        <span class="card-pill">AdamW</span>
+      </div>
+      <div class="card-preview">epoch 80/80  loss=0.021
+<span class="g">val_acc=1.000  [████████████████████]</span>
+lr=3.00e-05  cosine annealed</div>
+      <div class="card-badge">99.4% val accuracy</div>
+      <span class="card-arrow">↗</span>
+    </a>
+
+    <!-- nanohttp -->
+    <a href="https://github.com/HadiKhan777/nanohttp" target="_blank" rel="noopener" class="card c-nanohttp">
+      <div class="card-lang">Node.js</div>
+      <div class="card-name">nanohttp</div>
+      <div class="card-desc">HTTP/1.1 server with WebSocket (RFC 6455 framing), JWT HS256 auth, SSE, and gzip. Built on net.createServer, no http module.</div>
+      <div class="card-pills">
+        <span class="card-pill">RFC 6455</span>
+        <span class="card-pill">JWT</span>
+        <span class="card-pill">SSE</span>
+        <span class="card-pill">gzip</span>
+      </div>
+      <div class="card-preview"><span class="g">200</span>  POST  /auth/login   +2ms
+<span class="g">101</span>  WS   /chat  Switching
+<span class="g">200</span>  GET  /events  text/event-stream</div>
+      <span class="card-arrow">↗</span>
+    </a>
+
+    <!-- gitlet -->
+    <a href="https://github.com/HadiKhan777/gitlet" target="_blank" rel="noopener" class="card c-gitlet">
+      <div class="card-lang">Node.js</div>
+      <div class="card-name">gitlet</div>
+      <div class="card-desc">Git from scratch. SHA-256 content-addressable store, nested Merkle trees, 3-way merge, LCS unified diff, stash, tags, reset.</div>
+      <div class="card-pills">
+        <span class="card-pill">SHA-256</span>
+        <span class="card-pill">3-way merge</span>
+        <span class="card-pill">LCS diff</span>
+      </div>
+      <div class="card-preview"><span class="g">a4f2c31</span> (HEAD) add feature
+<span class="g">19df353</span> initial commit
+Fast-forward complete</div>
+      <span class="card-arrow">↗</span>
+    </a>
+
+    <!-- tui -->
+    <a href="https://github.com/HadiKhan777/tui" target="_blank" rel="noopener" class="card c-tui">
+      <div class="card-lang">Node.js</div>
+      <div class="card-name">tui</div>
+      <div class="card-desc">Terminal UI framework on raw ANSI escape codes. 30fps render loop, focus manager, scrollable list, tabs, modal, input with cursor.</div>
+      <div class="card-pills">
+        <span class="card-pill">ANSI</span>
+        <span class="card-pill">30fps</span>
+        <span class="card-pill">widgets</span>
+      </div>
+      <div class="card-preview"><span class="g">┌ CPU ────────────────┐</span>
+<span class="g">│</span> [<span class="g">████████████</span>░░░░] 62%<span class="g"> │</span>
+<span class="g">└─────────────────────┘</span></div>
+      <span class="card-arrow">↗</span>
+    </a>
+
+    <!-- kontainer -->
+    <a href="https://github.com/HadiKhan777/kontainer" target="_blank" rel="noopener" class="card c-kontainer">
+      <div class="card-lang">Node.js</div>
+      <div class="card-name">kontainer</div>
+      <div class="card-desc">Container runtime using Linux user/PID/mount/UTS/IPC namespaces and cgroup v2 for memory and CPU limits. No Docker. No root required.</div>
+      <div class="card-pills">
+        <span class="card-pill">namespaces</span>
+        <span class="card-pill">cgroup v2</span>
+        <span class="card-pill">chroot</span>
+        <span class="card-pill">devops</span>
+      </div>
+      <div class="card-preview">unshare --user --pid --mount --uts \
+  --fork --map-root-user \
+  sh -c '<span class="g">chroot /rootfs $CMD</span>'</div>
+      <span class="card-arrow">↗</span>
+    </a>
+
+    <!-- pipecraft -->
+    <a href="https://github.com/HadiKhan777/pipecraft" target="_blank" rel="noopener" class="card c-pipecraft">
+      <div class="card-lang">Node.js</div>
+      <div class="card-name">pipecraft</div>
+      <div class="card-desc">CI/CD pipeline engine with parallel jobs, topological dependency resolution, retry with exponential backoff, artifact collection, and a live TUI.</div>
+      <div class="card-pills">
+        <span class="card-pill">parallel jobs</span>
+        <span class="card-pill">toposort</span>
+        <span class="card-pill">retry</span>
+        <span class="card-pill">artifacts</span>
+      </div>
+      <div class="card-preview"><span class="g">✓</span> lint         3.1s
+<span class="g">✓</span> test        12.4s  (parallel)
+<span class="g">⟳</span> compile     running...</div>
+      <span class="card-arrow">↗</span>
+    </a>
+
+  </div>
+</section>
+
+<!-- ── Numbers ── -->
+<section class="section" id="numbers">
+  <div class="section-title">By the numbers</div>
+  <div class="numbers-grid">
+    <div class="num-cell reveal">
+      <div class="num-val">19,312</div>
+      <div class="num-ctx">ops/sec on PING<br>custom TCP, pipeline=64</div>
+    </div>
+    <div class="num-cell reveal">
+      <div class="num-val">7,240</div>
+      <div class="num-ctx">ops/sec on SET<br>WAL flush + 5-replica fan-out</div>
+    </div>
+    <div class="num-cell reveal">
+      <div class="num-val">99.4%</div>
+      <div class="num-ctx">validation accuracy<br>3-class spiral, NumPy only</div>
+    </div>
+    <div class="num-cell reveal">
+      <div class="num-val">0</div>
+      <div class="num-ctx">runtime dependencies<br>across all 7 projects</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Approach ── -->
+<section class="section">
+  <div class="section-title">How</div>
+  <div class="approach-items">
+    <div class="approach-row reveal">
+      <div class="approach-num">01</div>
+      <div class="approach-body">
+        <div class="approach-heading">Read the spec, write the code</div>
+        <p class="approach-text">RFC 6455 for WebSocket framing. POSIX namespace APIs for container isolation. The full backward pass derivation for BatchNorm. Understanding the substrate is the work, not the abstraction on top of it.</p>
+      </div>
+    </div>
+    <div class="approach-row reveal">
+      <div class="approach-num">02</div>
+      <div class="approach-body">
+        <div class="approach-heading">Zero dependencies forces clarity</div>
+        <p class="approach-text">When you cannot install a library, you are forced to understand what the library actually does. distkv does not use Redis. neuralkit does not use PyTorch. Every line exists because it needs to.</p>
+      </div>
+    </div>
+    <div class="approach-row reveal">
+      <div class="approach-num">03</div>
+      <div class="approach-body">
+        <div class="approach-heading">Benchmarks are proof, not decoration</div>
+        <p class="approach-text">19,312 ops/sec on PING. 7,240 on SET with replication. WAL replay after SIGKILL -9. Numbers come from running the code against real load, not from estimating what should be possible.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Stack ── -->
+<section class="section">
+  <div class="section-label">Tools</div>
+  <div class="stack-grid">
+    <div class="stack-item reveal">
+      <div class="stack-name">Node.js</div>
+      <div class="stack-detail">net, crypto, zlib, fs</div>
+    </div>
+    <div class="stack-item reveal">
+      <div class="stack-name">Python</div>
+      <div class="stack-detail">NumPy, argparse</div>
+    </div>
+    <div class="stack-item reveal">
+      <div class="stack-name">Linux</div>
+      <div class="stack-detail">namespaces, cgroups</div>
+    </div>
+    <div class="stack-item reveal">
+      <div class="stack-name">TCP / HTTP</div>
+      <div class="stack-detail">raw socket layer</div>
+    </div>
+    <div class="stack-item reveal">
+      <div class="stack-name">WebSocket</div>
+      <div class="stack-detail">RFC 6455 from scratch</div>
+    </div>
+    <div class="stack-item reveal">
+      <div class="stack-name">Git internals</div>
+      <div class="stack-detail">objects, refs, merge</div>
+    </div>
+    <div class="stack-item reveal">
+      <div class="stack-name">JWT / crypto</div>
+      <div class="stack-detail">HMAC-SHA256, timing-safe</div>
+    </div>
+    <div class="stack-item reveal">
+      <div class="stack-name">cgroup v2</div>
+      <div class="stack-detail">memory.max, cpu.max</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+  <span class="footer-left">github.com/HadiKhan777 &nbsp;/&nbsp; 7 repos</span>
+  <div class="footer-right">
+    <a href="https://github.com/HadiKhan777" target="_blank" rel="noopener">View all on GitHub ↗</a>
+  </div>
+</footer>
+
+<script>
+const observer = new IntersectionObserver(
+  entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in') }),
+  { threshold: 0.12 }
+);
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
