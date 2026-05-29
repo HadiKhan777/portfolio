@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hadi Khan — Universe</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;overflow:hidden;font-family:'Courier New',monospace;color:#e0e0e0}
+canvas{display:block}
+
+#loader{
+  position:fixed;inset:0;background:#000;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;z-index:999;transition:opacity 1.2s ease;
+}
+#loader-name{
+  font-size:clamp(2rem,6vw,5rem);font-weight:900;letter-spacing:0.2em;
+  color:#c8ff00;text-transform:uppercase;opacity:0;
+  animation:fadeIn 1s ease 0.3s forwards;
+}
+#loader-sub{
+  font-size:clamp(0.6rem,1.5vw,0.85rem);letter-spacing:0.5em;color:#404040;
+  margin-top:1rem;text-transform:uppercase;opacity:0;
+  animation:fadeIn 1s ease 0.8s forwards;
+}
+#loader-bar{
+  width:200px;height:1px;background:#111;margin-top:3rem;position:relative;overflow:hidden;
+  opacity:0;animation:fadeIn 0.5s ease 1s forwards;
+}
+#loader-fill{
+  position:absolute;top:0;left:0;height:100%;background:#c8ff00;
+  width:0%;transition:width 0.05s linear;
+}
+
+@keyframes fadeIn{to{opacity:1}}
+
+#ui{position:fixed;inset:0;pointer-events:none;z-index:10}
+
+#hud-top{
+  position:fixed;top:0;left:0;right:0;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.25rem 2rem;
+  background:linear-gradient(to bottom,rgba(0,0,0,0.7),transparent);
+  opacity:0;transition:opacity 1s ease;
+}
+#hud-name{font-size:11px;letter-spacing:0.35em;color:#c8ff00;text-transform:uppercase}
+#hud-right{font-size:10px;color:#404040;letter-spacing:0.12em}
+
+#stats-bar{
+  position:fixed;bottom:0;left:0;right:0;
+  display:flex;justify-content:center;gap:clamp(1.5rem,4vw,4rem);
+  padding:1.5rem 2rem 1.75rem;
+  background:linear-gradient(to top,rgba(0,0,0,0.8),transparent);
+  opacity:0;transition:opacity 1s ease;
+}
+.stat{text-align:center}
+.stat-val{display:block;font-size:clamp(1.1rem,2.5vw,1.8rem);font-weight:800;
+  color:#c8ff00;line-height:1;letter-spacing:-0.02em}
+.stat-lbl{display:block;font-size:clamp(8px,1.2vw,10px);color:#404040;
+  text-transform:uppercase;letter-spacing:0.12em;margin-top:0.3rem}
+
+#tooltip{
+  position:fixed;pointer-events:none;
+  background:rgba(8,8,8,0.95);border:1px solid #c8ff00;
+  padding:1.25rem 1.5rem;max-width:280px;line-height:1.7;
+  display:none;transform:translateY(-50%);
+  box-shadow:0 0 30px rgba(200,255,0,0.1);
+}
+.tt-name{font-size:1rem;font-weight:700;color:#c8ff00;letter-spacing:0.05em}
+.tt-lang{font-size:9px;color:#555;letter-spacing:0.2em;text-transform:uppercase;margin:0.2rem 0 0.75rem}
+.tt-desc{font-size:11px;color:#888;line-height:1.7}
+.tt-metric{display:inline-block;margin-top:0.75rem;font-size:10px;
+  color:#c8ff00;background:rgba(200,255,0,0.08);border:1px solid rgba(200,255,0,0.2);
+  padding:0.2rem 0.6rem;letter-spacing:0.05em}
+.tt-cta{display:block;margin-top:0.75rem;font-size:9px;color:#404040;letter-spacing:0.12em}
+
+#crosshair{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:20px;height:20px;pointer-events:none;opacity:0.15;
+}
+#crosshair::before,#crosshair::after{
+  content:'';position:absolute;background:#c8ff00;
+}
+#crosshair::before{width:1px;height:100%;left:50%;top:0}
+#crosshair::after{width:100%;height:1px;top:50%;left:0}
+
+#instructions{
+  position:fixed;bottom:5.5rem;right:1.5rem;
+  font-size:9px;color:#2a2a2a;letter-spacing:0.1em;
+  text-align:right;line-height:2.2;text-transform:uppercase;
+  opacity:0;transition:opacity 1s ease;
+}
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div id="loader-name">Hadi Khan</div>
+  <div id="loader-sub">Software Engineer &nbsp;·&nbsp; Systems Builder &nbsp;·&nbsp; Istanbul</div>
+  <div id="loader-bar"><div id="loader-fill"></div></div>
+</div>
+
+<div id="ui">
+  <div id="hud-top">
+    <span id="hud-name">github.com/HadiKhan777</span>
+    <span id="hud-right">drag to rotate &nbsp;·&nbsp; scroll to zoom &nbsp;·&nbsp; click planets to open</span>
+  </div>
+
+  <div id="crosshair"></div>
+
+  <div id="tooltip">
+    <div class="tt-name" id="tt-name"></div>
+    <div class="tt-lang" id="tt-lang"></div>
+    <div class="tt-desc" id="tt-desc"></div>
+    <div class="tt-metric" id="tt-metric"></div>
+    <span class="tt-cta">click to open project →</span>
+  </div>
+
+  <div id="stats-bar">
+    <div class="stat"><span class="stat-val">7</span><span class="stat-lbl">projects from scratch</span></div>
+    <div class="stat"><span class="stat-val">0</span><span class="stat-lbl">runtime dependencies</span></div>
+    <div class="stat"><span class="stat-val">19K</span><span class="stat-lbl">ops/sec · TCP</span></div>
+    <div class="stat"><span class="stat-val">99.4%</span><span class="stat-lbl">val accuracy</span></div>
+    <div class="stat"><span class="stat-val">80</span><span class="stat-lbl">internship days</span></div>
+    <div class="stat"><span class="stat-val">19</span><span class="stat-lbl">certifications</span></div>
+  </div>
+
+  <div id="instructions">
+    hover to inspect<br>
+    click to open<br>
+    drag to rotate<br>
+    scroll to zoom
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ── Scene ─────────────────────────────────────────────────────────────────
+const scene    = new THREE.Scene();
+const W = innerWidth, H = innerHeight;
+const camera   = new THREE.PerspectiveCamera(55, W/H, 0.1, 3000);
+camera.position.set(0, 25, 95);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(W, H);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setClearColor(0x000000);
+document.body.appendChild(renderer.domElement);
+
+// ── Lights ────────────────────────────────────────────────────────────────
+scene.add(new THREE.AmbientLight(0x111118, 1));
+const sunLight = new THREE.PointLight(0xc8ff00, 3, 120);
+scene.add(sunLight);
+const fillLight = new THREE.DirectionalLight(0x1a2244, 0.5);
+fillLight.position.set(-50, 30, -50);
+scene.add(fillLight);
+
+// ── Stars ─────────────────────────────────────────────────────────────────
+(function createStars() {
+  const geo = new THREE.BufferGeometry();
+  const n   = 8000;
+  const pos = new Float32Array(n * 3);
+  const col = new Float32Array(n * 3);
+  const starColors = [[1,1,1],[0.8,0.9,1],[1,0.95,0.8],[0.78,1,0.78]];
+  for (let i = 0; i < n; i++) {
+    const r = 400 + Math.random()*600;
+    const theta = Math.random()*Math.PI*2;
+    const phi   = Math.acos(2*Math.random()-1);
+    pos[i*3]   = r*Math.sin(phi)*Math.cos(theta);
+    pos[i*3+1] = r*Math.sin(phi)*Math.sin(theta);
+    pos[i*3+2] = r*Math.cos(phi);
+    const c = starColors[Math.floor(Math.random()*starColors.length)];
+    col[i*3]=c[0]; col[i*3+1]=c[1]; col[i*3+2]=c[2];
+  }
+  geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  geo.setAttribute('color',    new THREE.BufferAttribute(col,3));
+  const mat = new THREE.PointsMaterial({size:0.7,vertexColors:true,transparent:true,opacity:0.85});
+  scene.add(new THREE.Points(geo, mat));
+})();
+
+// ── Central star (Hadi) ───────────────────────────────────────────────────
+const coreGroup = new THREE.Group();
+scene.add(coreGroup);
+
+// Core sphere
+const coreMesh = new THREE.Mesh(
+  new THREE.SphereGeometry(7, 48, 48),
+  new THREE.MeshPhongMaterial({
+    color: 0x0d1a00, emissive: 0x1a3300, shininess: 120,
+    specular: 0xc8ff00,
+  })
+);
+coreGroup.add(coreMesh);
+
+// Glow aura (several layered transparent spheres)
+[9, 10.5, 12].forEach((r,i) => {
+  const m = new THREE.Mesh(
+    new THREE.SphereGeometry(r, 32, 32),
+    new THREE.MeshBasicMaterial({
+      color: 0xc8ff00, transparent:true, opacity:0.025-i*0.006, side: THREE.BackSide
+    })
+  );
+  coreGroup.add(m);
+});
+
+// Rings around the core
+[[9, 0.12, 0, Math.PI/2], [10, 0.08, Math.PI/6, Math.PI/3], [11, 0.06, Math.PI/4, Math.PI/5]].forEach(([r,t,rx,rz]) => {
+  const m = new THREE.Mesh(
+    new THREE.TorusGeometry(r, t, 8, 120),
+    new THREE.MeshBasicMaterial({color:0xc8ff00, transparent:true, opacity:0.5})
+  );
+  m.rotation.x = rx; m.rotation.z = rz;
+  coreGroup.add(m);
+});
+
+// Text sprite "HK" on the core
+(function addLabel() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 256; canvas.height = 256;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,256,256);
+  ctx.fillStyle = '#c8ff00';
+  ctx.font = 'bold 72px monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('HK', 128, 128);
+  const tex = new THREE.CanvasTexture(canvas);
+  const spr = new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,opacity:0.9}));
+  spr.scale.set(10,10,1);
+  coreGroup.add(spr);
+})();
+
+// ── Projects ──────────────────────────────────────────────────────────────
+const PROJECTS = [
+  { name:'distkv',    color:0xff3333, emissive:0x330000, r:2.4, orbit:24, speed:0.32, phase:0,
+    lang:'Node.js', desc:'Distributed KV store\nCustom TCP · WAL · Replication\n5 replicas in sync',
+    metric:'19,312 ops/sec on PING', url:'https://hadikhan777.github.io/distkv/' },
+  { name:'neuralkit', color:0x33aaff, emissive:0x001133, r:2.0, orbit:33, speed:0.24, phase:2.2,
+    lang:'Python/NumPy', desc:'Neural net from scratch\nBatchNorm · GELU · AdamW\nCosine LR scheduler',
+    metric:'99.4% val accuracy', url:'https://hadikhan777.github.io/neuralkit/' },
+  { name:'nanohttp',  color:0xff7700, emissive:0x2a1100, r:2.2, orbit:42, speed:0.19, phase:0.9,
+    lang:'Node.js', desc:'HTTP/1.1 + WebSocket server\nRFC 6455 · JWT HS256 · SSE\nGzip compression',
+    metric:'Zero dependencies', url:'https://hadikhan777.github.io/nanohttp/' },
+  { name:'gitlet',    color:0xffcc00, emissive:0x2a1f00, r:1.8, orbit:51, speed:0.15, phase:4.1,
+    lang:'Node.js', desc:'Git from scratch\nSHA-256 objects · 3-way merge\nLCS unified diff',
+    metric:'13 commands', url:'https://hadikhan777.github.io/gitlet/' },
+  { name:'tui',       color:0xc8ff00, emissive:0x182600, r:1.9, orbit:59, speed:0.12, phase:1.7,
+    lang:'Node.js', desc:'Terminal UI framework\nRaw ANSI · 30fps render loop\nFocus · Tabs · ScrollList',
+    metric:'Zero dependencies', url:'https://hadikhan777.github.io/tui/' },
+  { name:'kontainer', color:0xaa33ff, emissive:0x160033, r:2.2, orbit:68, speed:0.095, phase:3.5,
+    lang:'Node.js', desc:'Container runtime\nLinux namespaces · cgroup v2\nNo Docker · No root',
+    metric:'user/pid/mount/uts/ipc', url:'https://hadikhan777.github.io/kontainer/' },
+  { name:'pipecraft',  color:0xff33aa, emissive:0x30001a, r:2.0, orbit:77, speed:0.075, phase:5.2,
+    lang:'Node.js', desc:'CI/CD pipeline engine\nParallel jobs · Toposort\nRetry · Artifacts · TUI',
+    metric:'Webhook server :3141', url:'https://hadikhan777.github.io/pipecraft/' },
+];
+
+const planetMeshes = [];
+const planetGroups = [];
+
+PROJECTS.forEach((p, i) => {
+  const group = new THREE.Group();
+  scene.add(group);
+  planetGroups.push(group);
+
+  // Orbit ring (faint)
+  const orbitPts = [];
+  for (let j = 0; j <= 200; j++) {
+    const a = (j/200)*Math.PI*2;
+    orbitPts.push(new THREE.Vector3(Math.cos(a)*p.orbit, 0, Math.sin(a)*p.orbit));
+  }
+  const orbitLine = new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints(orbitPts),
+    new THREE.LineBasicMaterial({color:0x1a1a1a, transparent:true, opacity:0.5})
+  );
+  scene.add(orbitLine);
+
+  // Planet
+  const mesh = new THREE.Mesh(
+    new THREE.SphereGeometry(p.r, 32, 32),
+    new THREE.MeshPhongMaterial({
+      color: p.color, emissive: p.emissive, shininess: 80, specular: 0x444444
+    })
+  );
+  group.add(mesh);
+  planetMeshes.push(mesh);
+  mesh.userData = p;
+
+  // Atmosphere glow
+  const atm = new THREE.Mesh(
+    new THREE.SphereGeometry(p.r*1.35, 20, 20),
+    new THREE.MeshBasicMaterial({color:p.color, transparent:true, opacity:0.06, side:THREE.BackSide})
+  );
+  group.add(atm);
+
+  // Ring on alternate planets
+  if (i % 2 === 0) {
+    const ring = new THREE.Mesh(
+      new THREE.TorusGeometry(p.r*1.7, 0.09, 6, 60),
+      new THREE.MeshBasicMaterial({color:p.color, transparent:true, opacity:0.35})
+    );
+    ring.rotation.x = Math.PI * 0.35;
+    group.add(ring);
+  }
+
+  // Point light on planet
+  const pl = new THREE.PointLight(p.color, 0.6, 18);
+  mesh.add(pl);
+
+  // Orbiting mini-particles around planet
+  const partGeo = new THREE.BufferGeometry();
+  const partPos = new Float32Array(20*3);
+  for (let k = 0; k < 20; k++) {
+    const a = (k/20)*Math.PI*2;
+    const rad = p.r + 0.8 + Math.random()*1.5;
+    partPos[k*3]   = Math.cos(a)*rad;
+    partPos[k*3+1] = (Math.random()-0.5)*0.5;
+    partPos[k*3+2] = Math.sin(a)*rad;
+  }
+  partGeo.setAttribute('position', new THREE.BufferAttribute(partPos, 3));
+  const partMesh = new THREE.Points(partGeo, new THREE.PointsMaterial({color:p.color, size:0.12, transparent:true, opacity:0.6}));
+  group.add(partMesh);
+  group.userData = { particles: partMesh };
+});
+
+// ── Internship nebulae ────────────────────────────────────────────────────
+[
+  [-90, 5, -70, 0x2244aa, 0.05],   // Stewart
+  [ 90,-8, -90, 0x22aa55, 0.04],   // InfoTech
+  [  5, 50,-110, 0xaa4422, 0.04],  // Generix
+].forEach(([x,y,z,c,o]) => {
+  for (let i = 0; i < 3; i++) {
+    const n = new THREE.Mesh(
+      new THREE.SphereGeometry(15+i*5, 8, 8),
+      new THREE.MeshBasicMaterial({color:c, transparent:true, opacity:o/(i+1), side:THREE.BackSide})
+    );
+    n.position.set(x + (Math.random()-0.5)*8, y + (Math.random()-0.5)*8, z + (Math.random()-0.5)*8);
+    scene.add(n);
+  }
+});
+
+// ── Shooting stars ────────────────────────────────────────────────────────
+const shootingStars = [];
+function spawnShootingStar() {
+  const geo = new THREE.BufferGeometry();
+  const pos = new Float32Array(2*3);
+  const start = new THREE.Vector3((Math.random()-0.5)*300, (Math.random()-0.5)*100, (Math.random()-0.5)*300);
+  const dir   = new THREE.Vector3((Math.random()-0.5)*2, (Math.random()-0.5)*0.5, (Math.random()-0.5)*2).normalize();
+  pos[0]=start.x; pos[1]=start.y; pos[2]=start.z;
+  pos[3]=start.x+dir.x*20; pos[4]=start.y+dir.y*20; pos[5]=start.z+dir.z*20;
+  geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  const mat = new THREE.LineBasicMaterial({color:0xc8ff00, transparent:true, opacity:0.9});
+  const line = new THREE.Line(geo, mat);
+  scene.add(line);
+  shootingStars.push({line, dir, life:1.0, speed:2.5+Math.random()*2});
+}
+setInterval(() => { if (Math.random() < 0.4) spawnShootingStar(); }, 1800);
+
+// ── Floating data labels ──────────────────────────────────────────────────
+function makeLabel(text, x, y, z, color='#c8ff00', size=100) {
+  const c = document.createElement('canvas');
+  c.width = size*4; c.height = size;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = color;
+  ctx.font = `bold ${size*0.45}px monospace`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, c.width/2, c.height/2);
+  const spr = new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true,opacity:0.4}));
+  spr.position.set(x,y,z);
+  spr.scale.set(size*0.08, size*0.02, 1);
+  scene.add(spr);
+  return spr;
+}
+
+// ── Mouse & interaction ───────────────────────────────────────────────────
+const mouse    = new THREE.Vector2();
+const raycaster= new THREE.Raycaster();
+let   hovered  = null;
+const tooltip  = document.getElementById('tooltip');
+
+document.addEventListener('mousemove', e => {
+  mouse.x =  (e.clientX/innerWidth)*2-1;
+  mouse.y = -(e.clientY/innerHeight)*2+1;
+  tooltip.style.left = Math.min(e.clientX+24, innerWidth-300)+'px';
+  tooltip.style.top  = Math.max(e.clientY-60, 20)+'px';
+});
+
+document.addEventListener('click', () => {
+  if (hovered) window.open(hovered.userData.url, '_blank');
+});
+
+// ── Orbit controls ────────────────────────────────────────────────────────
+let drag=false, lastX=0, lastY=0;
+let rotY=0, rotX=0.28, zoom=95;
+let targetRotY=0, targetRotX=0.28, targetZoom=95;
+
+renderer.domElement.addEventListener('mousedown', e=>{drag=true;lastX=e.clientX;lastY=e.clientY;});
+renderer.domElement.addEventListener('mouseup',   ()=>{drag=false;});
+renderer.domElement.addEventListener('mousemove', e=>{
+  if(!drag)return;
+  targetRotY += (e.clientX-lastX)*0.006;
+  targetRotX += (e.clientY-lastY)*0.006;
+  targetRotX  = Math.max(-0.9, Math.min(0.9, targetRotX));
+  lastX=e.clientX; lastY=e.clientY;
+});
+renderer.domElement.addEventListener('wheel', e=>{
+  targetZoom = Math.max(35, Math.min(160, targetZoom + e.deltaY*0.04));
+  e.preventDefault();
+}, {passive:false});
+
+// Touch support
+renderer.domElement.addEventListener('touchstart', e=>{
+  drag=true; lastX=e.touches[0].clientX; lastY=e.touches[0].clientY;
+},{passive:true});
+renderer.domElement.addEventListener('touchend', ()=>{drag=false;},{passive:true});
+renderer.domElement.addEventListener('touchmove', e=>{
+  if(!drag)return;
+  targetRotY += (e.touches[0].clientX-lastX)*0.006;
+  targetRotX += (e.touches[0].clientY-lastY)*0.006;
+  targetRotX  = Math.max(-0.9,Math.min(0.9,targetRotX));
+  lastX=e.touches[0].clientX; lastY=e.touches[0].clientY;
+},{passive:true});
+
+// ── Animate ───────────────────────────────────────────────────────────────
+let t = 0;
+const clock = new THREE.Clock();
+
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = clock.getDelta();
+  t += dt;
+
+  // Smooth camera
+  rotY  += (targetRotY - rotY)  * 0.08;
+  rotX  += (targetRotX - rotX)  * 0.08;
+  zoom  += (targetZoom - zoom)   * 0.08;
+
+  camera.position.x = Math.sin(rotY)*zoom*Math.cos(rotX);
+  camera.position.y = Math.sin(rotX)*zoom;
+  camera.position.z = Math.cos(rotY)*zoom*Math.cos(rotX);
+  camera.lookAt(0,0,0);
+
+  // Auto-rotate when idle
+  if(!drag) targetRotY += 0.0008;
+
+  // Core rotation & pulse
+  coreGroup.rotation.y += 0.004;
+  coreGroup.children.forEach((c,i) => { if(i>0 && i<4) c.rotation.x += 0.0008*(i+1); });
+  sunLight.intensity = 2.5 + Math.sin(t*1.8)*0.7;
+
+  // Planet orbits
+  planetGroups.forEach((g,i) => {
+    const p   = PROJECTS[i];
+    const ang = t * p.speed + p.phase;
+    g.position.x = Math.cos(ang)*p.orbit;
+    g.position.y = Math.sin(t*0.4+i*1.3)*2.5;
+    g.position.z = Math.sin(ang)*p.orbit;
+    planetMeshes[i].rotation.y += 0.012;
+    // Spin the particle ring
+    if(g.userData.particles) g.userData.particles.rotation.y += 0.02;
+  });
+
+  // Shooting stars
+  for(let i = shootingStars.length-1; i >= 0; i--) {
+    const s = shootingStars[i];
+    s.life -= dt * 0.7;
+    s.line.material.opacity = Math.max(0, s.life);
+    const pos = s.line.geometry.attributes.position.array;
+    pos[0]+=s.dir.x*s.speed; pos[1]+=s.dir.y*s.speed; pos[2]+=s.dir.z*s.speed;
+    pos[3]+=s.dir.x*s.speed; pos[4]+=s.dir.y*s.speed; pos[5]+=s.dir.z*s.speed;
+    s.line.geometry.attributes.position.needsUpdate = true;
+    if(s.life <= 0){ scene.remove(s.line); shootingStars.splice(i,1); }
+  }
+
+  // Raycasting
+  raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObjects(planetMeshes);
+  if(hits.length) {
+    const obj = hits[0].object;
+    hovered = obj;
+    const d = obj.userData;
+    document.getElementById('tt-name').textContent   = d.name;
+    document.getElementById('tt-lang').textContent   = d.lang;
+    document.getElementById('tt-desc').innerHTML     = d.desc.split('\n').join('<br>');
+    document.getElementById('tt-metric').textContent = d.metric;
+    tooltip.style.display = 'block';
+    document.body.style.cursor = 'pointer';
+    obj.scale.lerp(new THREE.Vector3(1.25,1.25,1.25), 0.1);
+  } else {
+    hovered = null;
+    tooltip.style.display = 'none';
+    document.body.style.cursor = 'default';
+    planetMeshes.forEach(m => m.scale.lerp(new THREE.Vector3(1,1,1), 0.1));
+  }
+
+  renderer.render(scene, camera);
+}
+
+animate();
+
+// ── Loader ────────────────────────────────────────────────────────────────
+const fill = document.getElementById('loader-fill');
+const loader = document.getElementById('loader');
+let progress = 0;
+const loadInterval = setInterval(() => {
+  progress = Math.min(100, progress + (100-progress)*0.04 + 0.5);
+  fill.style.width = progress + '%';
+  if(progress >= 99.5) {
+    clearInterval(loadInterval);
+    setTimeout(() => {
+      loader.style.opacity = '0';
+      setTimeout(() => {
+        loader.style.display = 'none';
+        document.getElementById('hud-top').style.opacity   = '1';
+        document.getElementById('stats-bar').style.opacity = '1';
+        document.getElementById('instructions').style.opacity = '1';
+      }, 1200);
+    }, 400);
+  }
+}, 40);
+
+// ── Resize ────────────────────────────────────────────────────────────────
+window.addEventListener('resize', () => {
+  camera.aspect = innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+</script>
+</body>
+</html>
