@@ -865,6 +865,219 @@ footer {
 /* ── Magnetic button ── */
 .btn-primary, .btn-ghost { transition: transform .4s cubic-bezier(.16,1,.3,1); }
 
+/* ══════════════════════════════════════════════════
+   3D PROJECT CAROUSEL
+══════════════════════════════════════════════════ */
+.carousel-wrap {
+  position: relative;
+  padding: 0 0 5rem;
+  user-select: none;
+}
+
+.carousel-stage {
+  perspective: 1400px;
+  perspective-origin: 50% 42%;
+  height: 520px;
+  position: relative;
+  overflow: visible;
+}
+
+.pcard {
+  position: absolute;
+  width: 400px;
+  top: 0;
+  left: 50%;
+  margin-left: -200px;
+  background: var(--s1);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Lime top accent — full on active, hidden on others */
+.pcard::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: var(--accent);
+  z-index: 2;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .3s ease;
+}
+.pcard.is-active::before { transform: scaleX(1); }
+
+.pcard-media {
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.pcard-media img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  object-position: top center;
+  display: block;
+  background: var(--bg);
+  transition: transform .5s cubic-bezier(.16,1,.3,1);
+}
+.c-eduhas .pcard-media img,
+.c-evomind .pcard-media img { object-fit: cover; }
+
+.pcard.is-active .pcard-media img { transform: scale(1.03); }
+
+.pcard-body {
+  padding: 1.1rem 1.25rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.pcard-lang {
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--accent);
+  margin-bottom: .45rem;
+}
+.pcard-name {
+  font-family: var(--sans);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -.02em;
+  margin-bottom: .4rem;
+  line-height: 1.2;
+}
+.pcard-desc {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--dim);
+  line-height: 1.65;
+  margin-bottom: .75rem;
+  font-weight: 400;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.pcard-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .28rem;
+  margin-bottom: .75rem;
+}
+.pcard-pill {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  padding: .18rem .42rem;
+  border: 1px solid var(--border2);
+  color: var(--dim2);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+.pcard-footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: .65rem;
+  border-top: 1px solid var(--border);
+  gap: .5rem;
+}
+.pcard-badge {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--accent);
+  background: var(--accent2);
+  border: 1px solid var(--accent3);
+  padding: .18rem .45rem;
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+.pcard-link {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--dim);
+  text-decoration: none;
+  letter-spacing: .04em;
+  transition: color .15s;
+  white-space: nowrap;
+}
+.pcard-link:hover { color: var(--accent); }
+
+/* ── Navigation arrows ── */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 48px; height: 48px;
+  background: var(--s1);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .2s, border-color .2s, color .2s;
+}
+.carousel-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #080808;
+}
+.carousel-prev { left: calc(50% - 260px); }
+.carousel-next { right: calc(50% - 260px); }
+
+/* ── Dots ── */
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: .45rem;
+  margin-top: 2rem;
+}
+.cdot {
+  width: 6px; height: 6px;
+  border-radius: 3px;
+  background: var(--border2);
+  cursor: pointer;
+  transition: width .3s, background .3s;
+}
+.cdot.active {
+  width: 24px;
+  background: var(--accent);
+}
+
+/* ── Counter ── */
+.carousel-counter {
+  text-align: center;
+  margin-top: .75rem;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--dim);
+  letter-spacing: .08em;
+}
+.cc-cur { color: var(--text); font-weight: 700; }
+
+/* ── Mobile carousel ── */
+@media (max-width: 900px) {
+  .carousel-stage { height: 480px; }
+  .pcard { width: 320px; margin-left: -160px; }
+  .pcard-media { height: 180px; }
+  .carousel-prev { left: .5rem; }
+  .carousel-next { right: .5rem; }
+}
+
 /* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
@@ -978,190 +1191,128 @@ footer {
 <section class="section" id="projects">
   <div class="section-kicker">Selected work</div>
   <div class="section-title">9 projects.</div>
-  <div class="projects-grid">
 
-    <!-- EduHAS — featured, span 2 -->
-    <a href="https://github.com/HadiKhan777/eduhas" target="_blank" rel="noopener" class="card c-eduhas">
-      <div class="card-media"><img src="assets/eduhas.gif" alt="EduHAS — student dashboard, admin panel, AI quiz generation"></div>
-      <div class="card-body">
-        <div class="card-lang">Kotlin / Jetpack Compose</div>
-        <div class="card-name">EduHAS</div>
-        <div class="card-desc">Full-featured Android LMS for Kadir Has University. AI academic assistant and auto-quiz generation powered by Gemini. 30+ screens, Firebase backend, 3 user roles.</div>
-        <div class="card-pills">
-          <span class="card-pill">Gemini AI</span>
-          <span class="card-pill">Firebase</span>
-          <span class="card-pill">Jetpack Compose</span>
-          <span class="card-pill">MVVM</span>
-        </div>
-        <div class="card-footer">
-          <span class="card-badge">AI-powered LMS · Kotlin 2.0</span>
-          <a href="https://github.com/HadiKhan777/eduhas" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a>
+  <div class="carousel-wrap">
+    <div class="carousel-stage" id="carousel-stage">
+
+      <!-- 0: EduHAS -->
+      <div class="pcard c-eduhas" data-idx="0">
+        <div class="pcard-media"><img src="assets/eduhas.gif" alt="EduHAS demo" loading="lazy"></div>
+        <div class="pcard-body">
+          <div class="pcard-lang">Kotlin / Jetpack Compose</div>
+          <div class="pcard-name">EduHAS</div>
+          <div class="pcard-desc">Full-featured Android LMS for Kadir Has University. AI academic assistant and auto-quiz generation powered by Gemini. 30+ screens, Firebase backend, 3 user roles.</div>
+          <div class="pcard-pills"><span class="pcard-pill">Gemini AI</span><span class="pcard-pill">Firebase</span><span class="pcard-pill">Jetpack Compose</span><span class="pcard-pill">MVVM</span></div>
+          <div class="pcard-footer"><span class="pcard-badge">AI-powered LMS</span><a href="https://github.com/HadiKhan777/eduhas" target="_blank" rel="noopener" class="pcard-link">source ↗</a></div>
         </div>
       </div>
-      <span class="card-arrow">↗</span>
-    </a>
 
-    <!-- EvoMind -->
-    <a href="https://github.com/HadiKhan777/ori-ai-companion" target="_blank" rel="noopener" class="card c-evomind">
-      <div class="card-media"><img src="assets/evomind.gif" alt="EvoMind — emotion detection, AI chat, knowledge graph"></div>
-      <div class="card-body">
-        <div class="card-lang">Rust · Python · Angular</div>
-        <div class="card-name">EvoMind</div>
-        <div class="card-desc">Self-improving local AI companion. Every conversation rated and reinjected as few-shot prompts. Emotion recognition, sign language, TTS. Zero API cost.</div>
-        <div class="card-pills">
-          <span class="card-pill">Ollama</span>
-          <span class="card-pill">RAG</span>
-          <span class="card-pill">self-improving</span>
-          <span class="card-pill">Rust / Axum</span>
-        </div>
-        <div class="card-footer">
-          <span class="card-badge">zero API cost · local CPU</span>
-          <a href="https://github.com/HadiKhan777/ori-ai-companion" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a>
+      <!-- 1: EvoMind -->
+      <div class="pcard c-evomind" data-idx="1">
+        <div class="pcard-media"><img src="assets/evomind.gif" alt="EvoMind demo" loading="lazy"></div>
+        <div class="pcard-body">
+          <div class="pcard-lang">Rust · Python · Angular</div>
+          <div class="pcard-name">EvoMind</div>
+          <div class="pcard-desc">Self-improving local AI companion. Every conversation rated and reinjected as few-shot prompts. Emotion recognition, sign language, TTS. Zero API cost.</div>
+          <div class="pcard-pills"><span class="pcard-pill">Ollama</span><span class="pcard-pill">RAG</span><span class="pcard-pill">self-improving</span><span class="pcard-pill">Rust / Axum</span></div>
+          <div class="pcard-footer"><span class="pcard-badge">zero API cost</span><a href="https://github.com/HadiKhan777/ori-ai-companion" target="_blank" rel="noopener" class="pcard-link">source ↗</a></div>
         </div>
       </div>
-      <span class="card-arrow">↗</span>
-    </a>
 
-    <!-- neuralkit -->
-    <a href="https://hadikhan777.github.io/neuralkit/" target="_blank" rel="noopener" class="card c-neuralkit">
-      <div class="card-media"><img src="assets/neuralkit.gif" alt="neuralkit — training loop, loss dropping, 97.8% accuracy"></div>
-      <div class="card-body">
-        <div class="card-lang">Python / NumPy</div>
-        <div class="card-name">neuralkit</div>
-        <div class="card-desc">Neural network framework from first principles. BatchNorm, GELU, AdamW, cosine LR. Every backward pass written from the math.</div>
-        <div class="card-pills">
-          <span class="card-pill">backprop</span>
-          <span class="card-pill">BatchNorm</span>
-          <span class="card-pill">AdamW</span>
-        </div>
-        <div class="card-footer">
-          <span class="card-badge">99.4% val accuracy</span>
-          <a href="https://github.com/HadiKhan777/neuralkit" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a>
+      <!-- 2: neuralkit -->
+      <div class="pcard" data-idx="2">
+        <div class="pcard-media"><img src="assets/neuralkit.gif" alt="neuralkit demo" loading="lazy"></div>
+        <div class="pcard-body">
+          <div class="pcard-lang">Python / NumPy</div>
+          <div class="pcard-name">neuralkit</div>
+          <div class="pcard-desc">Neural network framework from first principles. BatchNorm, GELU, AdamW, cosine LR. Every backward pass written from the math.</div>
+          <div class="pcard-pills"><span class="pcard-pill">backprop</span><span class="pcard-pill">BatchNorm</span><span class="pcard-pill">AdamW</span></div>
+          <div class="pcard-footer"><span class="pcard-badge">99.4% val accuracy</span><a href="https://github.com/HadiKhan777/neuralkit" target="_blank" rel="noopener" class="pcard-link">source ↗</a></div>
         </div>
       </div>
-      <span class="card-arrow">↗</span>
-    </a>
 
-    <!-- distkv — featured, span 2 -->
-    <a href="https://hadikhan777.github.io/distkv/" target="_blank" rel="noopener" class="card c-distkv">
-      <div class="card-media"><img src="assets/distkv.gif" alt="distkv — SET/GET, WAL replication, SIGKILL recovery, benchmark"></div>
-      <div class="card-body">
-        <div class="card-lang">Node.js</div>
-        <div class="card-name">distkv</div>
-        <div class="card-desc">Distributed key-value store with a custom TCP protocol, write-ahead log, and streaming replication to N replicas. Redis-compatible surface, no Redis.</div>
-        <div class="card-pills">
-          <span class="card-pill">TCP</span>
-          <span class="card-pill">WAL</span>
-          <span class="card-pill">replication</span>
-          <span class="card-pill">distributed</span>
-        </div>
-        <div class="card-footer">
-          <span class="card-badge">19,312 ops/sec on PING</span>
-          <a href="https://github.com/HadiKhan777/distkv" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a>
+      <!-- 3: distkv -->
+      <div class="pcard" data-idx="3">
+        <div class="pcard-media"><img src="assets/distkv.gif" alt="distkv demo" loading="lazy"></div>
+        <div class="pcard-body">
+          <div class="pcard-lang">Node.js</div>
+          <div class="pcard-name">distkv</div>
+          <div class="pcard-desc">Distributed key-value store with a custom TCP protocol, write-ahead log, and streaming replication to N replicas. Redis-compatible surface, no Redis.</div>
+          <div class="pcard-pills"><span class="pcard-pill">TCP</span><span class="pcard-pill">WAL</span><span class="pcard-pill">replication</span></div>
+          <div class="pcard-footer"><span class="pcard-badge">19,312 ops/sec</span><a href="https://github.com/HadiKhan777/distkv" target="_blank" rel="noopener" class="pcard-link">source ↗</a></div>
         </div>
       </div>
-      <span class="card-arrow">↗</span>
-    </a>
 
-    <!-- tui -->
-    <a href="https://hadikhan777.github.io/tui/" target="_blank" rel="noopener" class="card c-tui">
-      <div class="card-media"><img src="assets/tui.gif" alt="tui — system monitor, process list, disk usage"></div>
-      <div class="card-body">
-        <div class="card-lang">Node.js</div>
-        <div class="card-name">tui</div>
-        <div class="card-desc">Terminal UI framework on raw ANSI escape codes. 30fps render loop, focus manager, scrollable list, tabs, modal, input with cursor.</div>
-        <div class="card-pills">
-          <span class="card-pill">ANSI</span>
-          <span class="card-pill">30fps</span>
-          <span class="card-pill">widgets</span>
-        </div>
-        <div class="card-footer">
-          <a href="https://github.com/HadiKhan777/tui" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a>
+      <!-- 4: tui -->
+      <div class="pcard" data-idx="4">
+        <div class="pcard-media"><img src="assets/tui.gif" alt="tui demo" loading="lazy"></div>
+        <div class="pcard-body">
+          <div class="pcard-lang">Node.js</div>
+          <div class="pcard-name">tui</div>
+          <div class="pcard-desc">Terminal UI framework on raw ANSI escape codes. 30fps render loop, focus manager, scrollable list, tabs, modal, input with cursor.</div>
+          <div class="pcard-pills"><span class="pcard-pill">ANSI</span><span class="pcard-pill">30fps</span><span class="pcard-pill">widgets</span></div>
+          <div class="pcard-footer"><a href="https://github.com/HadiKhan777/tui" target="_blank" rel="noopener" class="pcard-link">source ↗</a></div>
         </div>
       </div>
-      <span class="card-arrow">↗</span>
-    </a>
 
-    <!-- nanohttp -->
-    <a href="https://hadikhan777.github.io/nanohttp/" target="_blank" rel="noopener" class="card c-nanohttp">
-      <div class="card-media"><img src="assets/nanohttp.gif" alt="nanohttp — HTTP, WebSocket, SSE, JWT log"></div>
-      <div class="card-body">
-        <div class="card-lang">Node.js</div>
-        <div class="card-name">nanohttp</div>
-        <div class="card-desc">HTTP/1.1 server with WebSocket (RFC 6455), JWT HS256 auth, SSE, and gzip. Built on net.createServer, no http module.</div>
-        <div class="card-pills">
-          <span class="card-pill">RFC 6455</span>
-          <span class="card-pill">JWT</span>
-          <span class="card-pill">SSE</span>
-          <span class="card-pill">gzip</span>
-        </div>
-        <div class="card-footer">
-          <a href="https://github.com/HadiKhan777/nanohttp" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a>
+      <!-- 5: nanohttp -->
+      <div class="pcard" data-idx="5">
+        <div class="pcard-media"><img src="assets/nanohttp.gif" alt="nanohttp demo" loading="lazy"></div>
+        <div class="pcard-body">
+          <div class="pcard-lang">Node.js</div>
+          <div class="pcard-name">nanohttp</div>
+          <div class="pcard-desc">HTTP/1.1 server with WebSocket (RFC 6455), JWT HS256 auth, SSE, and gzip. Built on net.createServer, no http module.</div>
+          <div class="pcard-pills"><span class="pcard-pill">RFC 6455</span><span class="pcard-pill">JWT</span><span class="pcard-pill">SSE</span><span class="pcard-pill">gzip</span></div>
+          <div class="pcard-footer"><a href="https://github.com/HadiKhan777/nanohttp" target="_blank" rel="noopener" class="pcard-link">source ↗</a></div>
         </div>
       </div>
-      <span class="card-arrow">↗</span>
-    </a>
 
-    <!-- gitlet -->
-    <a href="https://hadikhan777.github.io/gitlet/" target="_blank" rel="noopener" class="card c-gitlet">
-      <div class="card-media"><img src="assets/gitlet.gif" alt="gitlet — commits, branching, 3-way merge, SHA-256 graph"></div>
-      <div class="card-body">
-        <div class="card-lang">Node.js</div>
-        <div class="card-name">gitlet</div>
-        <div class="card-desc">Git from scratch. SHA-256 content-addressable store, nested Merkle trees, 3-way merge, LCS unified diff, stash, tags, reset.</div>
-        <div class="card-pills">
-          <span class="card-pill">SHA-256</span>
-          <span class="card-pill">3-way merge</span>
-          <span class="card-pill">LCS diff</span>
-        </div>
-        <div class="card-footer">
-          <a href="https://github.com/HadiKhan777/gitlet" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a>
+      <!-- 6: gitlet -->
+      <div class="pcard" data-idx="6">
+        <div class="pcard-media"><img src="assets/gitlet.gif" alt="gitlet demo" loading="lazy"></div>
+        <div class="pcard-body">
+          <div class="pcard-lang">Node.js</div>
+          <div class="pcard-name">gitlet</div>
+          <div class="pcard-desc">Git from scratch. SHA-256 content-addressable store, nested Merkle trees, 3-way merge, LCS unified diff, stash, tags, reset.</div>
+          <div class="pcard-pills"><span class="pcard-pill">SHA-256</span><span class="pcard-pill">3-way merge</span><span class="pcard-pill">LCS diff</span></div>
+          <div class="pcard-footer"><a href="https://github.com/HadiKhan777/gitlet" target="_blank" rel="noopener" class="pcard-link">source ↗</a></div>
         </div>
       </div>
-      <span class="card-arrow">↗</span>
-    </a>
 
-    <!-- kontainer -->
-    <a href="https://hadikhan777.github.io/kontainer/" target="_blank" rel="noopener" class="card c-kontainer">
-      <div class="card-media"><img src="assets/kontainer.gif" alt="kontainer — namespace isolation, cgroup limits, cleanup"></div>
-      <div class="card-body">
-        <div class="card-lang">Node.js</div>
-        <div class="card-name">kontainer</div>
-        <div class="card-desc">Container runtime using Linux namespaces and cgroup v2 for memory and CPU limits. No Docker. No root required.</div>
-        <div class="card-pills">
-          <span class="card-pill">namespaces</span>
-          <span class="card-pill">cgroup v2</span>
-          <span class="card-pill">chroot</span>
-        </div>
-        <div class="card-footer">
-          <a href="https://github.com/HadiKhan777/kontainer" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a>
+      <!-- 7: kontainer -->
+      <div class="pcard" data-idx="7">
+        <div class="pcard-media"><img src="assets/kontainer.gif" alt="kontainer demo" loading="lazy"></div>
+        <div class="pcard-body">
+          <div class="pcard-lang">Node.js</div>
+          <div class="pcard-name">kontainer</div>
+          <div class="pcard-desc">Container runtime using Linux namespaces and cgroup v2 for memory and CPU limits. No Docker. No root required.</div>
+          <div class="pcard-pills"><span class="pcard-pill">namespaces</span><span class="pcard-pill">cgroup v2</span><span class="pcard-pill">chroot</span></div>
+          <div class="pcard-footer"><a href="https://github.com/HadiKhan777/kontainer" target="_blank" rel="noopener" class="pcard-link">source ↗</a></div>
         </div>
       </div>
-      <span class="card-arrow">↗</span>
-    </a>
 
-    <!-- pipecraft -->
-    <a href="https://hadikhan777.github.io/pipecraft/" target="_blank" rel="noopener" class="card c-pipecraft">
-      <div class="card-media"><img src="assets/pipecraft.gif" alt="pipecraft — parallel jobs, toposort, all green, deploy"></div>
-      <div class="card-body">
-        <div class="card-lang">Node.js</div>
-        <div class="card-name">pipecraft</div>
-        <div class="card-desc">CI/CD pipeline engine with parallel jobs, topological dependency resolution, retry with exponential backoff, artifact collection, and a live TUI.</div>
-        <div class="card-pills">
-          <span class="card-pill">parallel jobs</span>
-          <span class="card-pill">toposort</span>
-          <span class="card-pill">retry</span>
-          <span class="card-pill">artifacts</span>
-        </div>
-        <div class="card-footer">
-          <a href="https://github.com/HadiKhan777/pipecraft" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a>
+      <!-- 8: pipecraft -->
+      <div class="pcard" data-idx="8">
+        <div class="pcard-media"><img src="assets/pipecraft.gif" alt="pipecraft demo" loading="lazy"></div>
+        <div class="pcard-body">
+          <div class="pcard-lang">Node.js</div>
+          <div class="pcard-name">pipecraft</div>
+          <div class="pcard-desc">CI/CD pipeline engine with parallel jobs, topological dependency resolution, retry with exponential backoff, artifact collection.</div>
+          <div class="pcard-pills"><span class="pcard-pill">parallel jobs</span><span class="pcard-pill">toposort</span><span class="pcard-pill">retry</span></div>
+          <div class="pcard-footer"><a href="https://github.com/HadiKhan777/pipecraft" target="_blank" rel="noopener" class="pcard-link">source ↗</a></div>
         </div>
       </div>
-      <span class="card-arrow">↗</span>
-    </a>
 
-  </div>
-</section>
+    </div><!-- /carousel-stage -->
+
+    <button class="carousel-btn carousel-prev" aria-label="Previous project">&#8592;</button>
+    <button class="carousel-btn carousel-next" aria-label="Next project">&#8594;</button>
+
+    <div class="carousel-dots" id="carousel-dots"></div>
+    <div class="carousel-counter"><span class="cc-cur" id="cc-cur">1</span> / 9</div>
+
+  </div><!-- /carousel-wrap -->
+
 
 <!-- ── Experience ── -->
 <section class="section" id="experience">
@@ -1549,6 +1700,99 @@ gsap.utils.toArray('.section').forEach(sec => {
     });
   }
 });
+
+
+/* ── 6b. 3D Carousel ── */
+(function initCarousel() {
+  const stage   = document.getElementById('carousel-stage');
+  if (!stage) return;
+  const cards   = Array.from(stage.querySelectorAll('.pcard'));
+  const dotsWrap= document.getElementById('carousel-dots');
+  const cur     = document.getElementById('cc-cur');
+  const total   = cards.length;
+  let active    = 0;
+  let busy      = false;
+
+  const POS = {
+    '-3': { x:-950, z:-380, ry: 50, scale:.52, opacity:0,   zi:0 },
+    '-2': { x:-650, z:-260, ry: 36, scale:.70, opacity:.45, zi:1 },
+    '-1': { x:-340, z:-120, ry: 20, scale:.85, opacity:.78, zi:2 },
+     '0': { x:   0, z:  0,  ry:  0, scale:1,   opacity:1,   zi:5 },
+     '1': { x: 340, z:-120, ry:-20, scale:.85, opacity:.78, zi:2 },
+     '2': { x: 650, z:-260, ry:-36, scale:.70, opacity:.45, zi:1 },
+     '3': { x: 950, z:-380, ry:-50, scale:.52, opacity:0,   zi:0 },
+  };
+
+  /* Build dots */
+  cards.forEach((_, i) => {
+    const d = document.createElement('span');
+    d.className = 'cdot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => goTo(i));
+    dotsWrap.appendChild(d);
+  });
+
+  function clampRel(r) { return Math.max(-3, Math.min(3, r)); }
+
+  function applyPositions(instant) {
+    const dots = dotsWrap.querySelectorAll('.cdot');
+    cards.forEach((card, i) => {
+      let r = i - active;
+      r = ((r % total) + total) % total;
+      if (r > total / 2) r -= total;
+      const p   = POS[String(clampRel(r))];
+      const dur = instant ? 0 : 0.65;
+      gsap.to(card, { x:p.x, z:p.z, rotateY:p.ry, scale:p.scale, opacity:p.opacity, zIndex:p.zi, duration:dur, ease:'power3.out' });
+      card.classList.toggle('is-active', r === 0);
+      card.style.pointerEvents = r === 0 ? 'auto' : 'none';
+    });
+    dots.forEach((d, i) => d.classList.toggle('active', i === active));
+    cur.textContent = active + 1;
+  }
+
+  function goTo(idx) {
+    if (busy) return;
+    busy = true;
+    active = ((idx % total) + total) % total;
+    applyPositions(false);
+    setTimeout(() => { busy = false; }, 680);
+  }
+  const next = () => goTo(active + 1);
+  const prev = () => goTo(active - 1);
+
+  applyPositions(true);
+
+  document.querySelector('.carousel-prev').addEventListener('click', prev);
+  document.querySelector('.carousel-next').addEventListener('click', next);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') next();
+    if (e.key === 'ArrowLeft')  prev();
+  });
+
+  let tx0 = 0, ty0 = 0, t0 = 0;
+  stage.addEventListener('touchstart', e => { tx0=e.touches[0].clientX; ty0=e.touches[0].clientY; t0=Date.now(); }, { passive:true });
+  stage.addEventListener('touchend',   e => {
+    const dx = e.changedTouches[0].clientX - tx0;
+    const dy = e.changedTouches[0].clientY - ty0;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 55 && Date.now()-t0 < 450) dx<0 ? next() : prev();
+  }, { passive:true });
+
+  let mx0=0, drag=false;
+  stage.addEventListener('mousedown', e => { mx0=e.clientX; drag=true; });
+  document.addEventListener('mouseup', e => {
+    if (!drag) return; drag=false;
+    if (Math.abs(e.clientX-mx0) > 70) e.clientX<mx0 ? next() : prev();
+  });
+
+  cards.forEach((card, i) => {
+    card.addEventListener('click', e => {
+      let r = i - active;
+      r = ((r%total)+total)%total;
+      if (r > total/2) r -= total;
+      if (r !== 0) { e.preventDefault(); e.stopPropagation(); goTo(i); }
+    });
+  });
+})();
 
 
 /* ── 7. Nav scroll style ── */
