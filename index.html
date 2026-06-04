@@ -269,6 +269,8 @@ nav {
 .c-tui       { grid-column: span 4; }
 .c-kontainer { grid-column: span 6; }
 .c-pipecraft { grid-column: span 6; }
+.c-eduhas    { grid-column: span 7; }
+.c-evomind   { grid-column: span 5; }
 
 .card-lang {
   font-size: 10px;
@@ -325,6 +327,39 @@ nav {
 .card:hover .card-preview { color: #505050; }
 .card-preview .g { color: #2e4800; transition: color 0.18s; }
 .card:hover .card-preview .g { color: #4d7a00; }
+
+/* ── GIF hover overlay ── */
+.card-gif {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 58%;
+  object-fit: cover;
+  object-position: top center;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  display: block;
+}
+.card:hover .card-gif { opacity: 1; }
+
+.card-gif-hint {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: var(--dim2);
+  border: 1px solid var(--border2);
+  padding: 0.15rem 0.4rem;
+  text-transform: uppercase;
+  opacity: 1;
+  transition: opacity 0.25s;
+  pointer-events: none;
+}
+.card:hover .card-gif-hint { opacity: 0; }
 
 .card-badge {
   display: inline-block;
@@ -644,7 +679,8 @@ footer {
     background: var(--border);
   }
   .c-distkv, .c-neuralkit, .c-nanohttp,
-  .c-gitlet, .c-tui, .c-kontainer, .c-pipecraft {
+  .c-gitlet, .c-tui, .c-kontainer, .c-pipecraft,
+  .c-eduhas, .c-evomind {
     grid-column: span 1;
   }
   .numbers-grid { grid-template-columns: repeat(2, 1fr); }
@@ -672,38 +708,38 @@ footer {
       HADI<br><span class="accent">KHAN</span><span class="cursor-block"></span>
     </div>
     <p class="hero-sub">
-      Builds systems from scratch. Every protocol written by hand. Seven projects, zero runtime dependencies.
+      Builds AI systems that ship. LLMs, agents, and ML pipelines — engineered from first principles.
     </p>
     <div class="hero-chips">
-      <span class="chip">distributed systems</span>
-      <span class="chip">networking</span>
-      <span class="chip">devops</span>
+      <span class="chip">LLMs &amp; agents</span>
       <span class="chip">machine learning</span>
-      <span class="chip">linux internals</span>
+      <span class="chip">RAG systems</span>
+      <span class="chip">AI products</span>
+      <span class="chip">Python</span>
     </div>
   </div>
 
   <div class="hero-r">
     <div class="stats-grid">
       <div class="stat">
-        <div class="stat-val">7</div>
-        <div class="stat-lbl">projects built<br>from scratch</div>
+        <div class="stat-val">9</div>
+        <div class="stat-lbl">AI projects<br>shipped</div>
       </div>
       <div class="stat">
-        <div class="stat-val">0</div>
-        <div class="stat-lbl">runtime<br>dependencies</div>
-      </div>
-      <div class="stat">
-        <div class="stat-val">19K</div>
-        <div class="stat-lbl">ops/sec<br>TCP pipelined</div>
+        <div class="stat-val">19+</div>
+        <div class="stat-lbl">professional<br>certifications</div>
       </div>
       <div class="stat">
         <div class="stat-val">99.4%</div>
         <div class="stat-lbl">val accuracy<br>NumPy only</div>
       </div>
+      <div class="stat">
+        <div class="stat-val">3</div>
+        <div class="stat-lbl">internships<br>AI&nbsp;/ fullstack</div>
+      </div>
     </div>
     <p class="hero-note">
-      Node.js &nbsp;·&nbsp; Python &nbsp;·&nbsp; Linux<br>
+      Python &nbsp;·&nbsp; LLMs &nbsp;·&nbsp; Azure AI<br>
       github.com/HadiKhan777
     </p>
   </div>
@@ -711,7 +747,7 @@ footer {
 
 <!-- ── Projects ── -->
 <section class="section" id="projects">
-  <div class="section-label">Selected work &nbsp;/ &nbsp;7 repositories</div>
+  <div class="section-label">Selected work &nbsp;/ &nbsp;9 projects</div>
   <div class="projects-grid">
 
     <!-- distkv -->
@@ -731,6 +767,8 @@ footer {
   <span class="g">21 keys recovered from wal.log</span></div>
       <div class="card-badge">19,312 ops/sec on PING</div>
       <div class="card-links"><a href="https://github.com/HadiKhan777/distkv" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
+      <img class="card-gif" src="assets/distkv.gif" alt="distkv demo">
+      <span class="card-gif-hint">hover · preview</span>
       <span class="card-arrow">↗</span>
     </a>
 
@@ -749,6 +787,8 @@ footer {
 lr=3.00e-05  cosine annealed</div>
       <div class="card-badge">99.4% val accuracy</div>
       <div class="card-links"><a href="https://github.com/HadiKhan777/neuralkit" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
+      <img class="card-gif" src="assets/neuralkit.gif" alt="neuralkit training demo">
+      <span class="card-gif-hint">hover · preview</span>
       <span class="card-arrow">↗</span>
     </a>
 
@@ -767,6 +807,8 @@ lr=3.00e-05  cosine annealed</div>
 <span class="g">101</span>  WS   /chat  Switching
 <span class="g">200</span>  GET  /events  text/event-stream</div>
       <div class="card-links"><a href="https://github.com/HadiKhan777/nanohttp" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
+      <img class="card-gif" src="assets/nanohttp.gif" alt="nanohttp demo">
+      <span class="card-gif-hint">hover · preview</span>
       <span class="card-arrow">↗</span>
     </a>
 
@@ -784,6 +826,8 @@ lr=3.00e-05  cosine annealed</div>
 <span class="g">19df353</span> initial commit
 Fast-forward complete</div>
       <div class="card-links"><a href="https://github.com/HadiKhan777/gitlet" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
+      <img class="card-gif" src="assets/gitlet.gif" alt="gitlet demo">
+      <span class="card-gif-hint">hover · preview</span>
       <span class="card-arrow">↗</span>
     </a>
 
@@ -801,6 +845,8 @@ Fast-forward complete</div>
 <span class="g">│</span> [<span class="g">████████████</span>░░░░] 62%<span class="g"> │</span>
 <span class="g">└─────────────────────┘</span></div>
       <div class="card-links"><a href="https://github.com/HadiKhan777/tui" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
+      <img class="card-gif" src="assets/tui.gif" alt="tui demo">
+      <span class="card-gif-hint">hover · preview</span>
       <span class="card-arrow">↗</span>
     </a>
 
@@ -819,6 +865,8 @@ Fast-forward complete</div>
   --fork --map-root-user \
   sh -c '<span class="g">chroot /rootfs $CMD</span>'</div>
       <div class="card-links"><a href="https://github.com/HadiKhan777/kontainer" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
+      <img class="card-gif" src="assets/kontainer.gif" alt="kontainer demo">
+      <span class="card-gif-hint">hover · preview</span>
       <span class="card-arrow">↗</span>
     </a>
 
@@ -837,6 +885,50 @@ Fast-forward complete</div>
 <span class="g">✓</span> test        12.4s  (parallel)
 <span class="g">⟳</span> compile     running...</div>
       <div class="card-links"><a href="https://github.com/HadiKhan777/pipecraft" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
+      <img class="card-gif" src="assets/pipecraft.gif" alt="pipecraft demo">
+      <span class="card-gif-hint">hover · preview</span>
+      <span class="card-arrow">↗</span>
+    </a>
+
+    <!-- EduHAS -->
+    <a href="https://github.com/HadiKhan777/eduhas" target="_blank" rel="noopener" class="card c-eduhas">
+      <div class="card-lang">Kotlin / Jetpack Compose</div>
+      <div class="card-name">EduHAS</div>
+      <div class="card-desc">Full-featured Android LMS for Kadir Has University. AI academic assistant and auto-quiz generation powered by Gemini. 30+ screens, Firebase backend, 3 user roles — student, instructor, admin.</div>
+      <div class="card-pills">
+        <span class="card-pill">Gemini AI</span>
+        <span class="card-pill">Firebase</span>
+        <span class="card-pill">Jetpack Compose</span>
+        <span class="card-pill">MVVM</span>
+      </div>
+      <div class="card-preview"><span class="g">STUDENT</span>  courses  assignments  grades
+<span class="g">INSTRUCTOR</span>  ✦ generate quiz from topic
+<span class="g">AI</span>  "explain recursion to me..."</div>
+      <div class="card-badge">AI-powered LMS · Kotlin 2.0</div>
+      <div class="card-links"><a href="https://github.com/HadiKhan777/eduhas" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
+      <img class="card-gif" src="assets/eduhas.gif" alt="EduHAS demo">
+      <span class="card-gif-hint">hover · preview</span>
+      <span class="card-arrow">↗</span>
+    </a>
+
+    <!-- EvoMind -->
+    <a href="https://github.com/HadiKhan777/ori-ai-companion" target="_blank" rel="noopener" class="card c-evomind">
+      <div class="card-lang">Rust · Python · Angular</div>
+      <div class="card-name">EvoMind</div>
+      <div class="card-desc">Self-improving local AI companion. Every conversation rated and reinjected as few-shot prompts — the model gets better the more it's used. Emotion recognition, sign language, TTS. Zero API cost.</div>
+      <div class="card-pills">
+        <span class="card-pill">Ollama</span>
+        <span class="card-pill">RAG</span>
+        <span class="card-pill">self-improving</span>
+        <span class="card-pill">Rust / Axum</span>
+      </div>
+      <div class="card-preview"><span class="g">emotion:</span> lonely  intent: support
+<span class="g">few-shot:</span> 3 top-rated examples
+<span class="g">quality_score ↑</span>  dataset: 9,800+</div>
+      <div class="card-badge">zero API cost · local CPU</div>
+      <div class="card-links"><a href="https://github.com/HadiKhan777/ori-ai-companion" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
+      <img class="card-gif" src="assets/evomind.gif" alt="EvoMind demo">
+      <span class="card-gif-hint">hover · preview</span>
       <span class="card-arrow">↗</span>
     </a>
 
@@ -932,20 +1024,20 @@ Fast-forward complete</div>
   <div class="section-title">By the numbers</div>
   <div class="numbers-grid">
     <div class="num-cell reveal">
-      <div class="num-val">19,312</div>
-      <div class="num-ctx">ops/sec on PING<br>custom TCP, pipeline=64</div>
-    </div>
-    <div class="num-cell reveal">
-      <div class="num-val">7,240</div>
-      <div class="num-ctx">ops/sec on SET<br>WAL flush + 5-replica fan-out</div>
-    </div>
-    <div class="num-cell reveal">
       <div class="num-val">99.4%</div>
       <div class="num-ctx">validation accuracy<br>3-class spiral, NumPy only</div>
     </div>
     <div class="num-cell reveal">
-      <div class="num-val">0</div>
-      <div class="num-ctx">runtime dependencies<br>across all 7 projects</div>
+      <div class="num-val">19+</div>
+      <div class="num-ctx">professional certifications<br>Azure AI, .NET, GitHub, security</div>
+    </div>
+    <div class="num-cell reveal">
+      <div class="num-val">9,800+</div>
+      <div class="num-ctx">documents indexed<br>local RAG knowledge base</div>
+    </div>
+    <div class="num-cell reveal">
+      <div class="num-val">5</div>
+      <div class="num-ctx">agent swarm nodes<br>multi-provider AI orchestration</div>
     </div>
   </div>
 </section>
@@ -957,22 +1049,22 @@ Fast-forward complete</div>
     <div class="approach-row reveal">
       <div class="approach-num">01</div>
       <div class="approach-body">
-        <div class="approach-heading">Read the spec, write the code</div>
-        <p class="approach-text">RFC 6455 for WebSocket framing. POSIX namespace APIs for container isolation. The full backward pass derivation for BatchNorm. Understanding the substrate is the work, not the abstraction on top of it.</p>
+        <div class="approach-heading">Read the paper, understand the math</div>
+        <p class="approach-text">Attention Is All You Need before touching a transformer library. The full backward pass derivation for BatchNorm. Building neuralkit from NumPy up. Knowing what the abstraction hides is what lets you use it correctly.</p>
       </div>
     </div>
     <div class="approach-row reveal">
       <div class="approach-num">02</div>
       <div class="approach-body">
-        <div class="approach-heading">Zero dependencies forces clarity</div>
-        <p class="approach-text">When you cannot install a library, you are forced to understand what the library actually does. distkv does not use Redis. neuralkit does not use PyTorch. Every line exists because it needs to.</p>
+        <div class="approach-heading">Ship AI that works in production</div>
+        <p class="approach-text">Hallucination mitigation, prompt engineering, Azure AI Fundamentals — not just theory. Built SLS Client Onboarding with AI model selection research. NEXUS multi-provider agent swarm running locally. AI that actually runs.</p>
       </div>
     </div>
     <div class="approach-row reveal">
       <div class="approach-num">03</div>
       <div class="approach-body">
-        <div class="approach-heading">Benchmarks are proof, not decoration</div>
-        <p class="approach-text">19,312 ops/sec on PING. 7,240 on SET with replication. WAL replay after SIGKILL -9. Numbers come from running the code against real load, not from estimating what should be possible.</p>
+        <div class="approach-heading">Metrics are proof, not decoration</div>
+        <p class="approach-text">99.4% validation accuracy on a 3-class spiral, NumPy only — no PyTorch, no shortcuts. Numbers come from running the model, not estimating what should be possible.</p>
       </div>
     </div>
   </div>
@@ -983,43 +1075,43 @@ Fast-forward complete</div>
   <div class="section-label">Tools</div>
   <div class="stack-grid">
     <div class="stack-item reveal">
-      <div class="stack-name">Node.js</div>
-      <div class="stack-detail">net, crypto, zlib, fs</div>
-    </div>
-    <div class="stack-item reveal">
       <div class="stack-name">Python</div>
-      <div class="stack-detail">NumPy, argparse</div>
+      <div class="stack-detail">NumPy, PyTorch, transformers</div>
     </div>
     <div class="stack-item reveal">
-      <div class="stack-name">Linux</div>
-      <div class="stack-detail">namespaces, cgroups</div>
+      <div class="stack-name">LLMs</div>
+      <div class="stack-detail">Ollama, Groq, Azure OpenAI</div>
     </div>
     <div class="stack-item reveal">
-      <div class="stack-name">TCP / HTTP</div>
-      <div class="stack-detail">raw socket layer</div>
+      <div class="stack-name">Agents</div>
+      <div class="stack-detail">multi-agent swarms, tool use</div>
     </div>
     <div class="stack-item reveal">
-      <div class="stack-name">WebSocket</div>
-      <div class="stack-detail">RFC 6455 from scratch</div>
+      <div class="stack-name">RAG</div>
+      <div class="stack-detail">embeddings, vector search</div>
     </div>
     <div class="stack-item reveal">
-      <div class="stack-name">Git internals</div>
-      <div class="stack-detail">objects, refs, merge</div>
+      <div class="stack-name">Azure AI</div>
+      <div class="stack-detail">AI-900, Copilot Studio</div>
     </div>
     <div class="stack-item reveal">
-      <div class="stack-name">JWT / crypto</div>
-      <div class="stack-detail">HMAC-SHA256, timing-safe</div>
+      <div class="stack-name">ML from scratch</div>
+      <div class="stack-detail">NumPy, 99.4% accuracy</div>
     </div>
     <div class="stack-item reveal">
-      <div class="stack-name">cgroup v2</div>
-      <div class="stack-detail">memory.max, cpu.max</div>
+      <div class="stack-name">Node.js</div>
+      <div class="stack-detail">APIs, backends, tooling</div>
+    </div>
+    <div class="stack-item reveal">
+      <div class="stack-name">Prompt Engineering</div>
+      <div class="stack-detail">hallucination mitigation</div>
     </div>
   </div>
 </section>
 
 <!-- ── Footer ── -->
 <footer>
-  <span class="footer-left">github.com/HadiKhan777 &nbsp;/&nbsp; 7 repos</span>
+  <span class="footer-left">github.com/HadiKhan777 &nbsp;/&nbsp; 9 projects</span>
   <div class="footer-right" style="display:flex;gap:2rem;align-items:center;">
     <a href="universe.html" style="color:var(--accent);text-decoration:none;font-size:12px;font-weight:600;letter-spacing:0.04em;border:1px solid var(--border2);padding:0.4rem 0.9rem;transition:border-color 0.15s,background 0.15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.background='var(--accent2)'" onmouseout="this.style.borderColor='var(--border2)';this.style.background='transparent'">View in 3D Universe ↗</a>
     <a href="https://github.com/HadiKhan777" target="_blank" rel="noopener">View all on GitHub ↗</a>
