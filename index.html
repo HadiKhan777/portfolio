@@ -297,26 +297,63 @@ nav {
 /* ── Projects ── */
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1px;
   background: var(--border);
   border: 1px solid var(--border);
 }
 
+/* Featured AI projects span 2 cols */
+.c-eduhas  { grid-column: span 2; }
+.c-evomind { grid-column: span 1; }
+.c-neuralkit { grid-column: span 1; }
+.c-distkv    { grid-column: span 2; }
+.c-tui       { grid-column: span 1; }
+.c-nanohttp  { grid-column: span 1; }
+.c-gitlet    { grid-column: span 1; }
+.c-kontainer { grid-column: span 1; }
+.c-pipecraft { grid-column: span 1; }
+
 .card {
   background: var(--s1);
-  padding: 1.75rem 1.75rem 0;
   position: relative;
   overflow: hidden;
   text-decoration: none;
   color: inherit;
   display: flex;
   flex-direction: column;
-  transition: background 0.18s;
+  transition: background 0.2s;
 }
 
 .card:hover { background: var(--s2); }
 
+/* GIF / media — always visible at top, large */
+.card-media {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.c-eduhas  .card-media,
+.c-evomind .card-media,
+.c-distkv  .card-media { height: 240px; }
+
+.card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+
+.card:hover .card-media img { transform: scale(1.03); }
+
+/* Lime top border on hover */
 .card::before {
   content: '';
   position: absolute;
@@ -325,36 +362,34 @@ nav {
   background: var(--accent);
   transform: scaleX(0);
   transform-origin: left;
+  z-index: 2;
   transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
 }
-
 .card:hover::before { transform: scaleX(1); }
 
-.c-distkv    { grid-column: span 7; }
-.c-neuralkit { grid-column: span 5; }
-.c-nanohttp  { grid-column: span 4; }
-.c-gitlet    { grid-column: span 4; }
-.c-tui       { grid-column: span 4; }
-.c-kontainer { grid-column: span 6; }
-.c-pipecraft { grid-column: span 6; }
-.c-eduhas    { grid-column: span 7; }
-.c-evomind   { grid-column: span 5; }
+/* Card body */
+.card-body {
+  padding: 1.25rem 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
 
 .card-lang {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 9.5px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--accent);
-  margin-bottom: 0.65rem;
+  margin-bottom: 0.5rem;
 }
 
 .card-name {
   font-family: var(--sans);
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: var(--text);
-  margin-bottom: 0.65rem;
+  margin-bottom: 0.5rem;
   line-height: 1.2;
   letter-spacing: -0.02em;
 }
@@ -363,93 +398,71 @@ nav {
   font-family: var(--sans);
   font-size: 12.5px;
   color: var(--dim);
-  line-height: 1.7;
-  margin-bottom: 1rem;
-  max-width: 44ch;
+  line-height: 1.65;
+  margin-bottom: 0.85rem;
   font-weight: 400;
 }
 
 .card-pills {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem;
-  margin-bottom: 1rem;
+  gap: 0.3rem;
+  margin-bottom: 0.85rem;
 }
 
 .card-pill {
   font-family: var(--mono);
-  font-size: 9.5px;
-  padding: 0.2rem 0.5rem;
+  font-size: 9px;
+  padding: 0.18rem 0.45rem;
   border: 1px solid var(--border2);
   color: var(--dim2);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
 
+.card-footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+  gap: 0.75rem;
+}
+
 .card-badge {
-  display: inline-block;
-  margin-bottom: 0.85rem;
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 9.5px;
   color: var(--accent);
   background: var(--accent2);
   border: 1px solid var(--accent3);
-  padding: 0.2rem 0.55rem;
+  padding: 0.18rem 0.5rem;
   letter-spacing: 0.04em;
-}
-
-.card-links {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.25rem;
+  white-space: nowrap;
 }
 
 .card-src {
   font-family: var(--mono);
-  font-size: 10.5px;
+  font-size: 10px;
   color: var(--dim);
   text-decoration: none;
   letter-spacing: 0.04em;
-  border-bottom: 1px solid var(--border2);
-  padding-bottom: 1px;
-  transition: color 0.15s, border-color 0.15s;
+  transition: color 0.15s;
+  white-space: nowrap;
   pointer-events: all;
 }
 
-.card-src:hover { color: var(--text); border-color: var(--dim); }
-
-/* GIF thumbnail — always visible, expands on hover */
-.card-thumb {
-  margin-top: auto;
-  height: 90px;
-  overflow: hidden;
-  transition: height 0.45s cubic-bezier(0.16,1,0.3,1);
-  border-top: 1px solid var(--border);
-}
-
-.card:hover .card-thumb { height: 200px; }
-
-.card-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: top center;
-  display: block;
-  filter: brightness(0.95);
-  transition: filter 0.3s;
-}
-
-.card:hover .card-thumb img { filter: brightness(1.05); }
+.card-src:hover { color: var(--accent); }
 
 .card-arrow {
   position: absolute;
-  top: 1.25rem;
-  right: 1.25rem;
+  bottom: 1rem;
+  right: 1rem;
   color: var(--dim2);
-  font-size: 16px;
+  font-size: 14px;
   transition: color 0.18s, transform 0.18s;
   line-height: 1;
+  pointer-events: none;
 }
 
 .card:hover .card-arrow {
@@ -753,16 +766,17 @@ footer {
   .section { padding: 3rem 1.5rem; }
   nav { padding: 0 1.5rem; }
 
-  .projects-grid {
-    grid-template-columns: 1fr;
-    background: var(--border);
-  }
+  .projects-grid { grid-template-columns: 1fr; }
 
-  .c-distkv, .c-neuralkit, .c-nanohttp,
-  .c-gitlet, .c-tui, .c-kontainer, .c-pipecraft,
-  .c-eduhas, .c-evomind {
+  .c-eduhas, .c-evomind, .c-distkv, .c-neuralkit,
+  .c-tui, .c-nanohttp, .c-gitlet, .c-kontainer, .c-pipecraft {
     grid-column: span 1;
   }
+
+  .card-media,
+  .c-eduhas .card-media,
+  .c-evomind .card-media,
+  .c-distkv  .card-media { height: 200px; }
 
   .metrics-list { grid-template-columns: repeat(2, 1fr); }
   footer { flex-direction: column; gap: 1rem; align-items: flex-start; padding: 1.75rem 1.5rem; }
@@ -834,148 +848,184 @@ footer {
   <div class="section-title">9 projects.</div>
   <div class="projects-grid">
 
-    <!-- distkv -->
-    <a href="https://hadikhan777.github.io/distkv/" target="_blank" rel="noopener" class="card c-distkv">
-      <div class="card-lang">Node.js</div>
-      <div class="card-name">distkv</div>
-      <div class="card-desc">Distributed key-value store with a custom TCP protocol, write-ahead log, and streaming replication to N replicas. Redis-compatible surface, no Redis.</div>
-      <div class="card-pills">
-        <span class="card-pill">TCP</span>
-        <span class="card-pill">WAL</span>
-        <span class="card-pill">replication</span>
-        <span class="card-pill">distributed</span>
-      </div>
-      <div class="card-badge">19,312 ops/sec on PING</div>
-      <div class="card-links"><a href="https://github.com/HadiKhan777/distkv" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
-      <span class="card-arrow">↗</span>
-      <div class="card-thumb"><img src="assets/distkv.gif" alt="distkv demo"></div>
-    </a>
-
-    <!-- neuralkit -->
-    <a href="https://hadikhan777.github.io/neuralkit/" target="_blank" rel="noopener" class="card c-neuralkit">
-      <div class="card-lang">Python / NumPy</div>
-      <div class="card-name">neuralkit</div>
-      <div class="card-desc">Neural network framework from first principles. BatchNorm, GELU, AdamW, cosine LR. Every backward pass written from the math.</div>
-      <div class="card-pills">
-        <span class="card-pill">backprop</span>
-        <span class="card-pill">BatchNorm</span>
-        <span class="card-pill">AdamW</span>
-      </div>
-      <div class="card-badge">99.4% val accuracy</div>
-      <div class="card-links"><a href="https://github.com/HadiKhan777/neuralkit" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
-      <span class="card-arrow">↗</span>
-      <div class="card-thumb"><img src="assets/neuralkit.gif" alt="neuralkit training demo"></div>
-    </a>
-
-    <!-- nanohttp -->
-    <a href="https://hadikhan777.github.io/nanohttp/" target="_blank" rel="noopener" class="card c-nanohttp">
-      <div class="card-lang">Node.js</div>
-      <div class="card-name">nanohttp</div>
-      <div class="card-desc">HTTP/1.1 server with WebSocket (RFC 6455 framing), JWT HS256 auth, SSE, and gzip. Built on net.createServer, no http module.</div>
-      <div class="card-pills">
-        <span class="card-pill">RFC 6455</span>
-        <span class="card-pill">JWT</span>
-        <span class="card-pill">SSE</span>
-        <span class="card-pill">gzip</span>
-      </div>
-      <div class="card-links"><a href="https://github.com/HadiKhan777/nanohttp" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
-      <span class="card-arrow">↗</span>
-      <div class="card-thumb"><img src="assets/nanohttp.gif" alt="nanohttp demo"></div>
-    </a>
-
-    <!-- gitlet -->
-    <a href="https://hadikhan777.github.io/gitlet/" target="_blank" rel="noopener" class="card c-gitlet">
-      <div class="card-lang">Node.js</div>
-      <div class="card-name">gitlet</div>
-      <div class="card-desc">Git from scratch. SHA-256 content-addressable store, nested Merkle trees, 3-way merge, LCS unified diff, stash, tags, reset.</div>
-      <div class="card-pills">
-        <span class="card-pill">SHA-256</span>
-        <span class="card-pill">3-way merge</span>
-        <span class="card-pill">LCS diff</span>
-      </div>
-      <div class="card-links"><a href="https://github.com/HadiKhan777/gitlet" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
-      <span class="card-arrow">↗</span>
-      <div class="card-thumb"><img src="assets/gitlet.gif" alt="gitlet demo"></div>
-    </a>
-
-    <!-- tui -->
-    <a href="https://hadikhan777.github.io/tui/" target="_blank" rel="noopener" class="card c-tui">
-      <div class="card-lang">Node.js</div>
-      <div class="card-name">tui</div>
-      <div class="card-desc">Terminal UI framework on raw ANSI escape codes. 30fps render loop, focus manager, scrollable list, tabs, modal, input with cursor.</div>
-      <div class="card-pills">
-        <span class="card-pill">ANSI</span>
-        <span class="card-pill">30fps</span>
-        <span class="card-pill">widgets</span>
-      </div>
-      <div class="card-links"><a href="https://github.com/HadiKhan777/tui" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
-      <span class="card-arrow">↗</span>
-      <div class="card-thumb"><img src="assets/tui.gif" alt="tui demo"></div>
-    </a>
-
-    <!-- kontainer -->
-    <a href="https://hadikhan777.github.io/kontainer/" target="_blank" rel="noopener" class="card c-kontainer">
-      <div class="card-lang">Node.js</div>
-      <div class="card-name">kontainer</div>
-      <div class="card-desc">Container runtime using Linux user/PID/mount/UTS/IPC namespaces and cgroup v2 for memory and CPU limits. No Docker. No root required.</div>
-      <div class="card-pills">
-        <span class="card-pill">namespaces</span>
-        <span class="card-pill">cgroup v2</span>
-        <span class="card-pill">chroot</span>
-      </div>
-      <div class="card-links"><a href="https://github.com/HadiKhan777/kontainer" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
-      <span class="card-arrow">↗</span>
-      <div class="card-thumb"><img src="assets/kontainer.gif" alt="kontainer demo"></div>
-    </a>
-
-    <!-- pipecraft -->
-    <a href="https://hadikhan777.github.io/pipecraft/" target="_blank" rel="noopener" class="card c-pipecraft">
-      <div class="card-lang">Node.js</div>
-      <div class="card-name">pipecraft</div>
-      <div class="card-desc">CI/CD pipeline engine with parallel jobs, topological dependency resolution, retry with exponential backoff, artifact collection, and a live TUI.</div>
-      <div class="card-pills">
-        <span class="card-pill">parallel jobs</span>
-        <span class="card-pill">toposort</span>
-        <span class="card-pill">retry</span>
-        <span class="card-pill">artifacts</span>
-      </div>
-      <div class="card-links"><a href="https://github.com/HadiKhan777/pipecraft" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
-      <span class="card-arrow">↗</span>
-      <div class="card-thumb"><img src="assets/pipecraft.gif" alt="pipecraft demo"></div>
-    </a>
-
-    <!-- EduHAS -->
+    <!-- EduHAS — featured, span 2 -->
     <a href="https://github.com/HadiKhan777/eduhas" target="_blank" rel="noopener" class="card c-eduhas">
-      <div class="card-lang">Kotlin / Jetpack Compose</div>
-      <div class="card-name">EduHAS</div>
-      <div class="card-desc">Full-featured Android LMS for Kadir Has University. AI academic assistant and auto-quiz generation powered by Gemini. 30+ screens, Firebase backend, 3 user roles.</div>
-      <div class="card-pills">
-        <span class="card-pill">Gemini AI</span>
-        <span class="card-pill">Firebase</span>
-        <span class="card-pill">Jetpack Compose</span>
-        <span class="card-pill">MVVM</span>
+      <div class="card-media"><img src="assets/eduhas.gif" alt="EduHAS — student dashboard, admin panel, AI quiz generation"></div>
+      <div class="card-body">
+        <div class="card-lang">Kotlin / Jetpack Compose</div>
+        <div class="card-name">EduHAS</div>
+        <div class="card-desc">Full-featured Android LMS for Kadir Has University. AI academic assistant and auto-quiz generation powered by Gemini. 30+ screens, Firebase backend, 3 user roles.</div>
+        <div class="card-pills">
+          <span class="card-pill">Gemini AI</span>
+          <span class="card-pill">Firebase</span>
+          <span class="card-pill">Jetpack Compose</span>
+          <span class="card-pill">MVVM</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-badge">AI-powered LMS · Kotlin 2.0</span>
+          <a href="https://github.com/HadiKhan777/eduhas" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a>
+        </div>
       </div>
-      <div class="card-badge">AI-powered LMS · Kotlin 2.0</div>
-      <div class="card-links"><a href="https://github.com/HadiKhan777/eduhas" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
       <span class="card-arrow">↗</span>
-      <div class="card-thumb"><img src="assets/eduhas.gif" alt="EduHAS demo"></div>
     </a>
 
     <!-- EvoMind -->
     <a href="https://github.com/HadiKhan777/ori-ai-companion" target="_blank" rel="noopener" class="card c-evomind">
-      <div class="card-lang">Rust · Python · Angular</div>
-      <div class="card-name">EvoMind</div>
-      <div class="card-desc">Self-improving local AI companion. Every conversation rated and reinjected as few-shot prompts. Emotion recognition, sign language, TTS. Zero API cost.</div>
-      <div class="card-pills">
-        <span class="card-pill">Ollama</span>
-        <span class="card-pill">RAG</span>
-        <span class="card-pill">self-improving</span>
-        <span class="card-pill">Rust / Axum</span>
+      <div class="card-media"><img src="assets/evomind.gif" alt="EvoMind — emotion detection, AI chat, knowledge graph"></div>
+      <div class="card-body">
+        <div class="card-lang">Rust · Python · Angular</div>
+        <div class="card-name">EvoMind</div>
+        <div class="card-desc">Self-improving local AI companion. Every conversation rated and reinjected as few-shot prompts. Emotion recognition, sign language, TTS. Zero API cost.</div>
+        <div class="card-pills">
+          <span class="card-pill">Ollama</span>
+          <span class="card-pill">RAG</span>
+          <span class="card-pill">self-improving</span>
+          <span class="card-pill">Rust / Axum</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-badge">zero API cost · local CPU</span>
+          <a href="https://github.com/HadiKhan777/ori-ai-companion" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a>
+        </div>
       </div>
-      <div class="card-badge">zero API cost · local CPU</div>
-      <div class="card-links"><a href="https://github.com/HadiKhan777/ori-ai-companion" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a></div>
       <span class="card-arrow">↗</span>
-      <div class="card-thumb"><img src="assets/evomind.gif" alt="EvoMind demo"></div>
+    </a>
+
+    <!-- neuralkit -->
+    <a href="https://hadikhan777.github.io/neuralkit/" target="_blank" rel="noopener" class="card c-neuralkit">
+      <div class="card-media"><img src="assets/neuralkit.gif" alt="neuralkit — training loop, loss dropping, 97.8% accuracy"></div>
+      <div class="card-body">
+        <div class="card-lang">Python / NumPy</div>
+        <div class="card-name">neuralkit</div>
+        <div class="card-desc">Neural network framework from first principles. BatchNorm, GELU, AdamW, cosine LR. Every backward pass written from the math.</div>
+        <div class="card-pills">
+          <span class="card-pill">backprop</span>
+          <span class="card-pill">BatchNorm</span>
+          <span class="card-pill">AdamW</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-badge">99.4% val accuracy</span>
+          <a href="https://github.com/HadiKhan777/neuralkit" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a>
+        </div>
+      </div>
+      <span class="card-arrow">↗</span>
+    </a>
+
+    <!-- distkv — featured, span 2 -->
+    <a href="https://hadikhan777.github.io/distkv/" target="_blank" rel="noopener" class="card c-distkv">
+      <div class="card-media"><img src="assets/distkv.gif" alt="distkv — SET/GET, WAL replication, SIGKILL recovery, benchmark"></div>
+      <div class="card-body">
+        <div class="card-lang">Node.js</div>
+        <div class="card-name">distkv</div>
+        <div class="card-desc">Distributed key-value store with a custom TCP protocol, write-ahead log, and streaming replication to N replicas. Redis-compatible surface, no Redis.</div>
+        <div class="card-pills">
+          <span class="card-pill">TCP</span>
+          <span class="card-pill">WAL</span>
+          <span class="card-pill">replication</span>
+          <span class="card-pill">distributed</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-badge">19,312 ops/sec on PING</span>
+          <a href="https://github.com/HadiKhan777/distkv" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a>
+        </div>
+      </div>
+      <span class="card-arrow">↗</span>
+    </a>
+
+    <!-- tui -->
+    <a href="https://hadikhan777.github.io/tui/" target="_blank" rel="noopener" class="card c-tui">
+      <div class="card-media"><img src="assets/tui.gif" alt="tui — system monitor, process list, disk usage"></div>
+      <div class="card-body">
+        <div class="card-lang">Node.js</div>
+        <div class="card-name">tui</div>
+        <div class="card-desc">Terminal UI framework on raw ANSI escape codes. 30fps render loop, focus manager, scrollable list, tabs, modal, input with cursor.</div>
+        <div class="card-pills">
+          <span class="card-pill">ANSI</span>
+          <span class="card-pill">30fps</span>
+          <span class="card-pill">widgets</span>
+        </div>
+        <div class="card-footer">
+          <a href="https://github.com/HadiKhan777/tui" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a>
+        </div>
+      </div>
+      <span class="card-arrow">↗</span>
+    </a>
+
+    <!-- nanohttp -->
+    <a href="https://hadikhan777.github.io/nanohttp/" target="_blank" rel="noopener" class="card c-nanohttp">
+      <div class="card-media"><img src="assets/nanohttp.gif" alt="nanohttp — HTTP, WebSocket, SSE, JWT log"></div>
+      <div class="card-body">
+        <div class="card-lang">Node.js</div>
+        <div class="card-name">nanohttp</div>
+        <div class="card-desc">HTTP/1.1 server with WebSocket (RFC 6455), JWT HS256 auth, SSE, and gzip. Built on net.createServer, no http module.</div>
+        <div class="card-pills">
+          <span class="card-pill">RFC 6455</span>
+          <span class="card-pill">JWT</span>
+          <span class="card-pill">SSE</span>
+          <span class="card-pill">gzip</span>
+        </div>
+        <div class="card-footer">
+          <a href="https://github.com/HadiKhan777/nanohttp" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a>
+        </div>
+      </div>
+      <span class="card-arrow">↗</span>
+    </a>
+
+    <!-- gitlet -->
+    <a href="https://hadikhan777.github.io/gitlet/" target="_blank" rel="noopener" class="card c-gitlet">
+      <div class="card-media"><img src="assets/gitlet.gif" alt="gitlet — commits, branching, 3-way merge, SHA-256 graph"></div>
+      <div class="card-body">
+        <div class="card-lang">Node.js</div>
+        <div class="card-name">gitlet</div>
+        <div class="card-desc">Git from scratch. SHA-256 content-addressable store, nested Merkle trees, 3-way merge, LCS unified diff, stash, tags, reset.</div>
+        <div class="card-pills">
+          <span class="card-pill">SHA-256</span>
+          <span class="card-pill">3-way merge</span>
+          <span class="card-pill">LCS diff</span>
+        </div>
+        <div class="card-footer">
+          <a href="https://github.com/HadiKhan777/gitlet" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a>
+        </div>
+      </div>
+      <span class="card-arrow">↗</span>
+    </a>
+
+    <!-- kontainer -->
+    <a href="https://hadikhan777.github.io/kontainer/" target="_blank" rel="noopener" class="card c-kontainer">
+      <div class="card-media"><img src="assets/kontainer.gif" alt="kontainer — namespace isolation, cgroup limits, cleanup"></div>
+      <div class="card-body">
+        <div class="card-lang">Node.js</div>
+        <div class="card-name">kontainer</div>
+        <div class="card-desc">Container runtime using Linux namespaces and cgroup v2 for memory and CPU limits. No Docker. No root required.</div>
+        <div class="card-pills">
+          <span class="card-pill">namespaces</span>
+          <span class="card-pill">cgroup v2</span>
+          <span class="card-pill">chroot</span>
+        </div>
+        <div class="card-footer">
+          <a href="https://github.com/HadiKhan777/kontainer" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a>
+        </div>
+      </div>
+      <span class="card-arrow">↗</span>
+    </a>
+
+    <!-- pipecraft -->
+    <a href="https://hadikhan777.github.io/pipecraft/" target="_blank" rel="noopener" class="card c-pipecraft">
+      <div class="card-media"><img src="assets/pipecraft.gif" alt="pipecraft — parallel jobs, toposort, all green, deploy"></div>
+      <div class="card-body">
+        <div class="card-lang">Node.js</div>
+        <div class="card-name">pipecraft</div>
+        <div class="card-desc">CI/CD pipeline engine with parallel jobs, topological dependency resolution, retry with exponential backoff, artifact collection, and a live TUI.</div>
+        <div class="card-pills">
+          <span class="card-pill">parallel jobs</span>
+          <span class="card-pill">toposort</span>
+          <span class="card-pill">retry</span>
+          <span class="card-pill">artifacts</span>
+        </div>
+        <div class="card-footer">
+          <a href="https://github.com/HadiKhan777/pipecraft" target="_blank" rel="noopener" class="card-src" onclick="event.stopPropagation()">source ↗</a>
+        </div>
+      </div>
+      <span class="card-arrow">↗</span>
     </a>
 
   </div>
