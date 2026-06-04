@@ -869,19 +869,19 @@ footer {
 }
 
 .carousel-stage {
-  perspective: 1400px;
+  perspective: 1600px;
   perspective-origin: 50% 42%;
-  height: 520px;
+  height: 640px;
   position: relative;
   overflow: visible;
 }
 
 .pcard {
   position: absolute;
-  width: 400px;
+  width: 480px;
   top: 0;
   left: 50%;
-  margin-left: -200px;
+  margin-left: -240px;
   background: var(--s1);
   border: 1px solid var(--border);
   overflow: hidden;
@@ -909,7 +909,7 @@ footer {
 
 .pcard-media {
   width: 100%;
-  height: 220px;
+  height: 280px;
   overflow: hidden;
   flex-shrink: 0;
   background: var(--bg);
@@ -1030,8 +1030,8 @@ footer {
   border-color: var(--accent);
   color: #080808;
 }
-.carousel-prev { left: calc(50% - 260px); }
-.carousel-next { right: calc(50% - 260px); }
+.carousel-prev { left: calc(50% - 300px); }
+.carousel-next { right: calc(50% - 300px); }
 
 /* ── Dots ── */
 .carousel-dots {
@@ -1065,9 +1065,9 @@ footer {
 
 /* ── Mobile carousel ── */
 @media (max-width: 900px) {
-  .carousel-stage { height: 480px; }
-  .pcard { width: 320px; margin-left: -160px; }
-  .pcard-media { height: 180px; }
+  .carousel-stage { height: 540px; }
+  .pcard { width: 360px; margin-left: -180px; }
+  .pcard-media { height: 200px; }
   .carousel-prev { left: .5rem; }
   .carousel-next { right: .5rem; }
 }
@@ -1712,13 +1712,13 @@ setTimeout(() => ScrollTrigger.refresh(), 300);
   let busy      = false;
 
   const POS = {
-    '-3': { x:-950, z:-380, ry: 50, scale:.52, opacity:0,   zi:0 },
-    '-2': { x:-650, z:-260, ry: 36, scale:.70, opacity:.45, zi:1 },
-    '-1': { x:-340, z:-120, ry: 20, scale:.85, opacity:.78, zi:2 },
-     '0': { x:   0, z:  0,  ry:  0, scale:1,   opacity:1,   zi:5 },
-     '1': { x: 340, z:-120, ry:-20, scale:.85, opacity:.78, zi:2 },
-     '2': { x: 650, z:-260, ry:-36, scale:.70, opacity:.45, zi:1 },
-     '3': { x: 950, z:-380, ry:-50, scale:.52, opacity:0,   zi:0 },
+    '-3': { x:-1100, z:-420, ry: 50, scale:.50, opacity:0,   zi:0 },
+    '-2': { x: -760, z:-280, ry: 36, scale:.68, opacity:.45, zi:1 },
+    '-1': { x: -400, z:-130, ry: 20, scale:.84, opacity:.78, zi:2 },
+     '0': { x:    0, z:  0,  ry:  0, scale:1,   opacity:1,   zi:5 },
+     '1': { x:  400, z:-130, ry:-20, scale:.84, opacity:.78, zi:2 },
+     '2': { x:  760, z:-280, ry:-36, scale:.68, opacity:.45, zi:1 },
+     '3': { x: 1100, z:-420, ry:-50, scale:.50, opacity:0,   zi:0 },
   };
 
   /* Build dots */
