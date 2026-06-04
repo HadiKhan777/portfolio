@@ -345,11 +345,16 @@ nav {
 .card-media img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: top center;
   display: block;
+  background: var(--bg);
   transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
 }
+
+/* EduHAS and EvoMind are full-frame composites — cover fills nicer */
+.c-eduhas .card-media img,
+.c-evomind .card-media img { object-fit: cover; }
 
 .card:hover .card-media img { transform: scale(1.03); }
 
